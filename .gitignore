@@ -1,4 +1,5 @@
 docs/*
 !docs/*.tex
+!docs/*.bib
 *.out
 *.o
