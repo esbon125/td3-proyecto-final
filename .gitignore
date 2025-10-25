@@ -1,3 +1,4 @@
-docs/*.pdf
+docs/*
+!docs/*.tex
 *.out
 *.o
