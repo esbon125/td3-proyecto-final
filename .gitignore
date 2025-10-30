@@ -1,5 +1,5 @@
 docs/*
 !docs/*.tex
 !docs/*.bib
-*.out
+*out*
 *.o

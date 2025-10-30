@@ -1,0 +1,828 @@
+Last updates:
+
+2022-11-15: first version
+
+2023-01-04: bug fix in fxp_sum
+
+2023-01-05: Multiplication now done not using longs, entirely with ints, so 
+supporting systems where sizeof(long) == sizeof(int), but for now at the 
+cost of performance, and some precision loss (but that precision loss gets 
+solved later, see update end of Jan/2023 below).
+
+2023-01-06: bugs fixed in new safe multiplication, also in the safe sum for 
+a border case.
+
+2023-01-08: new version with runtime-modifiable number of bits to use for 
+the frac part. Fine-tuned all code, now all tests run with 0 warnings for 
+any chosen number of frac bits. Tester checks different nums of frac bits.
+
+2023-01-09: Default number of frac bits is set to 14. Beautified tester 
+output organization.
+
+2023-01-11: Using gcc's own built in to count leading zeros. Tester program 
+now using long-doubles to better compare different implementations of the 
+operations. Thanks to that, a few bugs exposed and fixed along the way.
+
+2023-01-15: implemented fxp division using only ints (fxp_div) Basically a 
+software-based implementation of binary division (tailored to fxp's.) 
+Because of this, it is significantly slower: average execution time of 
+first version is ~6x that of fxp_div_l. However it will work for systems in 
+which sizeof(long) is not larger than sizeof(int).
+
+2023-01-29: improved testing framework using long doubles, and refactored 
+some utility functions related to testing and tracing in a separate file: 
+fxp_aux.c.
+
+2023-01-31: significant precision improvement in fxp_mul(), now offering 
+pretty much the same precision as fxp_mul_l() while still only using ints, 
+no longs. The calculation uses the distributive approach twice, now the 
+second time within the frac part only.
+
+2023-02-01: bug fixed in fxp_xtimes.c. After this fix, the true relative 
+execution time of fxp_mul() is shown to be effectively ~6x that of 
+fxp_mul_l(). This makes a lot of sense, as a similar ratio stands between 
+fxp_div() and fxp_div_l(). Both * and / operations implemented using longs 
+are then significantly faster (~6x) than the int-only implementations.
+
+2023-02-09: log2_l implemented. Uses an algorithm that requires one 
+multiplication (using longs) per mantissa bit, so simple to implement, but 
+quite expensive. Likely will replace it with a more efficient one later. 
+For now the relative execution time of one log2_l() calculation of an fxp 
+is about ~18x that of adding two fxp's.
+
+2023-02-10: BKM for logarithm calculation implemented: log2_bkm() Clearly 
+faster than log2_l: ~28.5% the runtime: one BKM log calculation is about 
+~5x the addition of two fxp's. The BKM calculation also has 30 bit-frac 
+precision (log2_l's precision is max 29 frac bits). BKM can also compute 
+the logarithms when the fxp config is using only 1 whole bit (log2_l 
+requires at least 3 whole bits.) Tester requires relaxing the delta 
+tolerance in this case. The only drawback of BKM is that it requires some 
+more memory: needs a table of 32 ints with some pre-calculated log values
+
+2023-02-11: Debugging implementations of log2, and exploring the largest 
+errors incurred. Also moving these last updates out of the README and into
+this separate file.
+
+2023-02-14: lg2 implemented and debugged. 4 versions:
+lg2():      BKM using only ints. Excellent accuracy, fast.
+lg2_l():    BKM using longs. Excellent accuracy, fastest.
+lg2_mul():  Uses multiplication, and only ints. This is the slowest, but
+            requires no table of pre-calculated values like BKM does.
+            Not as accurate as the BKM-based functions.
+lg2_mul_l(): Uses multiplication and longs, no table of pre-calculated
+            values required. Not as accurate as the BKM-based functions.
+
+2023-02-15: Measuring execution times of the different lg2
+implementations more accurately passing only + arguments.
+Average ratio of their relative exec times using 8, 16, 24 and 28
+frac bits. Are all relative to fxp_lg2 itself here (not to fxp_add()):
+fxp_lg2:		1
+fxp_lg2_l:		0.51x
+fxp_lg2_mul_l:	1.54x
+fxp_lg2_mul:	9.3x
+fxp_lg2_mul() is quite the odd man out: at least using current
+implementation of fxp_mul() (which takes ~6x the time of _mul_l()).
+It takes fxp_lg2_mul() ~9x the time fxp_lg2() takes to run.
+Almost an order of magnitude slower!
+Only in some extremely memory-limited scenarios would it
+make sense to be ok with such loss in speed, compared to just having
+to hold the arrays of pre-calculated values in memory for the
+BKM-based lg2, a total of only ~66 int values. And that could be
+even cut in half by eliminating the _xtra array, so only ~33 int
+values. Not processing those _xtra[] values would mean losing ultimate
+precision, but it would make lg2 simpler and also faster actually.
+So for now eliminating the lg2_mul() implementation. If worth
+considering, it's the same as lg2_mul_l() after all, only the call
+to  fxp_mul_l() in its loop would need to get replaced with a call
+to fxp_mul().
+Added some system info at the beginning of the outputs.
+Added ln() and log10(), also tests for them.
+
+2023-02-16: trying to get 128-bit precision for the long double
+constants on an Intel-based pc. Only way seems to be to resort
+to using quadmath.h, little program test_quad.c checks this.
+Cleaning up comments. Also simplified the testing of lg10 and ln.
+
+2023-02-18: separated the functions using longs into a separate
+fxp_l.* files.  
+A new file fxp_conv.c with utility conversion functions between 
+fxp and float, double, and long double.
+Adjusted code in all programs to use some variables as externals
+from some of the other files.
+Improved fxp_xtimes to show at the end the averages of configs
+with 8, 12, 16, 20, 24, and 28 frac bits.
+
+2023-02-19: removed macros MIN and MAX from fxp.h
+Bug fix in the new fxp2ld conversion: it was using truncf() instead of
+truncl().
+Added tests for all roundtrip conversions, fxp -> floating-point ->
+back to fxp.
+
+2023-02-23:
+Replacing #define statements with constant declarations in the 
+program files.
+Defining the transcendental constants with unsigned ints
+Updated the 64 bit unsigned long versions of the transcendental 
+constants with more accurate calculations (using 128 bit long doubles 
+in Arm) down to the last bit rounded
+Removing fxp_tconst.h
+
+2023-02-25:
+Writing a core multiplication function for two frac parts using the 
+distributive scheme on its halves (words): mul_distrib(). This can be 
+called from the fxp_mul() to compute pf3, but also after calculating 
+a log2 or pow2 mantissa, to multiply it by the factors for base e or 
+base 10 logarithms at full possible precision within ints, before any 
+r-shifting. This way we avoid significant precision loss for those
+functions.
+
+2023-03-06:
+Simplified fxp_mul calling mul_distrib() for pf3
+Preliminaries for the new scheme to multiply mantissas by lg and pow 
+factors at full precision.
+Improved fxp_get_dec_frac() for the cases when
+FXP_frac_mask is < fxp_frac_max_dec
+Minor debuggin of division in one border case where it was returning 
+FXP_UNDEF when it should have returned FXP_NEG_INF. This was related to 
+the overflow check at the beginning of the division, which uses 
+multiplication. Fox x = fxp(1), and y = 2 (so y = tiniest+1), FXP_MAX * y 
+was exactly == x, yet the division was calculating x / y and returning 
+FXP_UNDEF in the end (all one bits).
+
+2023-03-07:
+mul_distrib_l() implemented in fxp_l.c
+fxp_pow2_l() implemented using mul_distrib_l()
+Tests for it now run with zero warnings!
+
+2023-03-12:
+mul_distrib() implemented in fxp.c,
+fxp_pow2() implemented using mul_distrib(), and
+tests for it now also running with zero warnings
+
+2023-03-13:
+Calibrating lg2 against lg2_l making it also loop through all
+FXP_INT_BITS iterations, then also rounding last mantissa bit
+in lg2 exactly the same way lg2_l does.
+Then testing lg2 with exact same argument right after each test of lg2_l,
+now shows both with exact same result down to the very last bit.
+(Between pow2_l vs. pow2 at least for now there are ocassional differences
+in the very last bit, but this is always below the warning range anyway.)
+General aux variables cleanup, removed a few not really needed
+especially for lg2.
+Variable names now more consistent between int vs. long implementations
+of lg2 and pow2 functions.
+
+2023-03-19:
+Modified tester to use the more typical ordering of
+"expected before actual" arguments in test_fxp().
+Functions ln_l() and lg10_l() reimplemented by calling
+lg2_x_factor_l(), which multiplies by the factors at their
+full precision. This means that ln_l and lg10_l now have
+the same "as good as it can ever get" accuracy as lg2_l!
+(WDELTA_MAX lowered from 6 to 2, yet no warnings!)
+Compacted the code that tests all logarithms and powers.
+
+2023-03-20:
+Separated print_<type>_as_bin() functions into print_as_bits.c
+Fine tuning lg2_x_factor(), analogous to lg2_x_factor_l()
+in fxp_l.c, but for ints only in fxp.c.
+Digging into the correct shifts needed for a final negative
+lg for all frac bit cases.
+Special tests for lg2(x) for x in [0, k] with k < 1, which
+would cause overflow because of not enough whole bits
+for the result.
+After that, also 0 warnings for lg2, ln, and lg10 even with
+the lowered WDELTA_MAX, so same accuracy as the _l versions.
+As far as accuracy, this completes all the logarithms.
+
+2023-03-22:
+Renamed variables in lg2_x_factor for more clarity.
+Improving the VERBOSE printouts, and inspecting
+in detail the ranges of inputs that trigger certain
+running paths in lg2_x_factor.
+Clean up of vars no longer used.
+
+2023-03-23:
+Made fxp_tconst.c show the unsigned fxp representations
+for constants lg2(e) y lg2(10), both as uint and ulong.
+They will be used as factors for calculation of exp() and
+pow10() using pow2().
+Renamed the tuple struct used for lg as cmtuple (will also
+use it for pow).
+Reimplemented pow2 using the intermediate tuple.
+
+2023-03-25:
+Fixed a bug in one corner case for which oddly enough 
+our Actual value was correct, but the Expected one was
+incorrect!
+Using 31 frac bits, pow2_l(-tiniest) was returning
+a correct result very close to but smaller than 1,
+as expected, yet get_pow2_target(-tiniest) was incorrectly
+returning +INF.
+This problem was caused by how FXP_max_ld was initialized.
+Now instead of initializing it from the max valid fractional
+value, and checking if any actual value was > than that,
+we now initialize FXP_max_ld as the first invalid + integer
+minus half tiniest for the current FXP config, and we check
+if any value is >= to it.
+After this change, with 31 frac bits get_pow2_target(-tiniest)
+now does return a value very close to but smaller than 1, as
+expected, instead of +INF.
+
+2023-03-27
+exp_l() and pow10_l() implemented using pow2_l()
+Debugged mul_distrib_l(): xbyb was being used before
+initialization.
+Simplified and unified the tuple variable names on fxp.c
+and fxp_l.c
+
+2023-03-29
+Relative execution times for ln(), ln_l(), exp() and exp_l()
+now also measured by fxp_xtimes.c
+
+2023-03-31
+Intermediate refactoring of pow2() in fxp.c, following the same
+adjusments made in fxp_l.c implementing exp and pow10
+as pow2 times the corresponding factor.
+
+2023-04-02
+Finishing implementation of exp() and pow10() using pow2().
+Some border cases still pending for detailed testing and
+debugging, i.e.: exp(14.999...) triggers assert, but only
+when using 8 or 9 frac bits (???).
+
+2023-04-03
+Added rounding of the l-shifted fracs at the end in functions 
+get_xc_as_tuple(_l), which helps minimizes frac precision loss 
+for exp() and pow10() (a.k.a. the 'LoFi' power functions).
+
+Finished testing the power function after identifying and adding 
+tests for their 'kcrit' values, those which when used as their 
+exponents can incurr in large warning-triggering deltas for 
+certain frag bit configurations.
+
+Modified tester to use a more relaxed WDELTA_MAX when including 
+tests for the 'LoFi' power functions, while keeping a much more 
+strict error tolerance when skipping them.
+
+Added a summary list of warning counts per frac bit 
+configurations at the end of the tester output.
+
+2023-04-05
+Implementing the emulation of longs using uints (calling struct
+and file ulongy.) This abstraction not only simplifies the BKM-E/L 
+implementations in fxp.c greatly (they can mirror the code in 
+fxp_l.c almost line by line,) but more importantly, it also 
+enables us to preserve long precision all the way through the 
+intermediate calculations in fxp.c for all transcendental 
+functions that are ultimately based on lg2 and pow2, that is: ln, 
+exp, log10, pow10, powxy, and sqrt. With this, there will be no 
+such thing as 'LoFi' precision for any of the int-only 
+implementations of those functions, so they will all end up being 
+exactly as accurate as their fxp_l.c counterparts.
+
+2023-04-11
+Continuing with emulation of longs.
+Withholding the idea of reimplementing in Rust.
+
+2023-04-17
+
+Renaming the distributive multiplication functions (formerly 
+'mul_distrib') as 'dmul'.
+
+The distributive multiplication functions turned out to be quite 
+critical and needed in several places once trying to offer 
+ultimate precision for all fxp transcendental functions (ln, exp, 
+powxy etc) when using only ints. Also depending on where the dmul 
+functions are getting called from, different combinations of 
+argument types and result types are needed, so separate 
+implementations (so far 6) required to cover all use cases 
+encountered:
+
+Using only ints:
+    uint x uint --> uint
+    uint x uint --> ulongy
+    ulongy x uint --> ulongy
+    ulongy x ulongy --> ulongy
+Using longs:
+    ulong x uint --> ulong
+    ulong x ulong --> ulong
+
+Writing a separate tester for all of them: dmul_tester.c
+Separate and not in fxp_tester because the dmul functions
+are independent and agnostic of frac bits and fxp's.
+
+2023-04-18
+
+Finishing ulongy.c, and dmul_tester.c
+
+2023-04-19
+
+Refactoring code to make use of all the new
+dmul functions.
+
+2023-04-20
+Debugged rshift in ulongy testing the refactored lg2_x_factor
+and ln()
+
+2023-04-22
+Defined the new long double infinity thresholds
+FXP_max_ldx = FXP_max_ld + "half tiniest"
+FXP_min_ldx = FXP_min_ld - "half tiniest"
+ 
+Problematic border case, pow2_l(-2*tiniest) when using 31 frac 
+bits. Expected result was +infinity, but the actual value 
+calculated was almost infinity, yet no quite there, just very 
+close to or equal to FXP_MAX. Extra accuracy increasing the 
+number of loops in bkm_emode to INT BITS + 3 does solve that 
+issue for 31 bits, but then a problematic case remains for 30 
+bits (?). This one, calculating pow2_l(1-tiniest), ended up 
+with infinity vs. non-infinity the other way around: pow2_l 
+returned infinity, but the expected long double was very close 
+to but not quite >= the +infinity threshold.
+
+2023-04-23
+
+The overall problem of those cases described above is not 
+related to any fxp calculation inaccuracy, but just to the way 
+the tester is mishandling very close values around the 
+infinity thresholds. It has been triggering asserts whenever 
+some expected vs. actual difference involves infinite vs. 
+non-infinite values. That is the actual problem.
+
+The fact is: regardless of bit accuracy in use, and how 
+extremely close to each other they are , e.g. well below the 
+max delta, expected vs. actual values CAN STILL POTENTIALLY 
+LAND ON DIFFERENT SIDES OF AN INFINITY THREASHOLD. AND THAT IS 
+A PERFECTLY FINE RESULT THAT WE SHOULD STILL ASSESS AS "SAME". 
+THE FACT THAT AN INFINITY THRESHOLD IS BETWEEN THEM DOESN'T 
+REALLY DETRACT FROM THEIR CLOSENESS. The tester, however, so 
+far has always triggered an assert whenever one of the values 
+either expected or actual is finite, while the other is an 
+infinity. This has been the real issue, not any of the fxp 
+calculations.
+
+Modified the assert logic so that when expected vs. actual 
+land on different sides of one of the tester's long double 
+infinity thresholds (e.g. FXP_max_ldx, or FXP_min_ldx), then 
+an effective delta will still get computed between the 
+non-infinity value (either the expected or the actual) and the 
+corresponding infinity threshold. If that delta is still 
+within the max allowed delta, then everything is fine. Those 
+expected vs. actual are effectively so close that, for all 
+practical purposes, they are still the 'same' value.
+
+Besides now not triggering those asserts, the tester will
+however count how many of these rare threshold cases are
+encountered per frac bit configuration, and the final
+report now includes these counts.
+
+Modified function print_fxp and the tester, so that the long
+double printouts of the exp vs. actual values are perfecly
+aligned on the output, for easier comparison.
+
+Logarithm tests done similarly to the pow tests, so as to 
+eliminate redundancies.
+
+2023-04-24
+
+Optimizing pow2_l, no need to use dmul since if one of the 
+operands is a 1 as it is the case here, then the result of the 
+dmul will for sure end up identical to the other operand 
+anyway. We just need to shift it properly.
+
+Double checking every iteration step of pow2_l for a border
+case, to make sure they match exactly the steps in the pow2
+implementation in bkm.c, which uses long doubles.
+
+2023-04-25
+
+Tester output refinements, specially displaying the
+long double values.
+
+Adjusting exp_l and pow10_l. Finished testing them.
+
+2023-04-26
+
+Completed refactoring in fxp.c, now uses an emulation of 
+unsigned longs with two uints in a struct (called "ulongy") 
+to process logarithms and power functions. Thanks to this, 
+there are no longer any "LoFi" power functions: even though 
+exp and pow10 technically still use only ints, they are now 
+exactly just as accurate as exp_l and pow10_l using longs.
+
+2023-04-27
+Tests ran perfectly on an Intel pc, but failed on a Raspberry PI (Arm).
+The test that failed was lg10(largest). After deeper inspection,
+found out there was a bug in my r-shift function for ulongys,
+which did not manifest when running on the Intel cpu, go figure.
+Fixed it. Then ran successfully also on the Raspberry Pi.
+Generated output and xtimes from the Rasp Pi as well.
+
+
+2023-04-28
+
+Thinking about cleanest way to implement sqrt() and powxy() given the
+already written code, I'm realizing my internal "xc" functions
+(get_xc_as_tuple[_l]) have 3 parameters, which brings to mind some wise 
+observations from the book "Clean Code": likely some of these arguments
+ought to be wrapped into a class of their own, and likely the function
+is directly dealing with more than one level of abstraction.
+
+In my case, the arguments which ought to be wrapped into a class of their
+own would be the second and third. Those are the factor C, and 
+c_nwbits: how many bits in C are whole bits. The duo clearly constitutes
+a missing abstraction: a sort of independent or "self-configured" fixed point
+number.
+
+This is not just a "bigger FXP," it also has its own independent 
+fxp configuration, (it's own number of whole vs. frac bits,) independent of
+the global fxp setting, and in fact it carries this independent configuration
+within. So it's an FXP with significant superpowers, so to speak.
+Calling it super_fxp then.
+
+The elements in the table of logs are (or could be) basically also 
+instances of this abstraction, not just plain simple u. longs or ulongys.
+They are indeed "super FXP's" with their own independent configuration,
+and using more bits than normal fxps. All in the table with the same
+configuration, but still, one that is completely independent of the global
+fxp configuration.
+
+So planning to refactor the code with this abstraction in mind.
+
+
+2023-05-03
+
+Pinpointing where is the precision beyond that of int really making a 
+difference, by zeroing-out the lowest bits wherever using longs. After this 
+check, turns out the tuple_l with pong as an unsigned long is overkill; an 
+unsigned int there will do.
+
+
+2023-05-05
+
+Log and pow functions in fxp_l now working and tested after the refactoring.
+
+
+2023-05-06
+
+Tricky halving of the tuple negative values returned from the lg2 functions. 
+sqrt_l implemented. Testing it.
+
+Depprecated function lim_frac in fxp_aux, no longer used after the 
+refinements in handling values near infinity thresholds.
+
+
+2023-05-07
+
+Added rounding in the halving of tuples in sqrt_l -> results in zero 
+warnings in all tests for sqrt.
+
+Documented refactoring TODO's specially in the comment for 
+fxp_pow2_wneg_tuple_l (pending abstraction issue with the tuple it needs as 
+input.)
+Made pong in the tuple in fxp be an unsigned int, since it's overkill
+to have it as ulongy (see 2023-05-03). Then eliminated the tuple_l, since
+fxp_l is now using the exact same tuple struct used by fxp.
+Added measuring sqrt_l and sqrt to fxp_xtimes.
+
+2023-05-08
+
+Debugged initialization of ULONGY_ALL_ONES_RS1 in ulongy.h, which was
+causing a least significant bit difference between final frac results
+from pow10_l and pow10 in some specific random cases. This was enough
+to trigger assert if WDELTA_MAX was 1.0, even if not for 1.01.
+After this fix, reverting it to 1.0, and absolutely zero warnings.
+
+Added super_fxp to fxp.c, refactored some of pow-related functions
+to have super_fxp arguments, as in fxp_l.c
+
+Minor optimization in ulongy bitwise_and apllied only on the hi uint 
+when we now the lo will remain the same. This optimizes a bit get_xc and 
+therefore the pow functions in general.
+
+Optimizations for lg functions by lowering the FXP_lg2_maxloops from 
+FXP_frac_bits + 1 to FXP_frac_bits, realizing still no warnings 
+whatsoever occur. If lowering it to frac bits -1, then asserts do occur.
+
+Also optimizing the maxloops to use in lg2_x_factor, lowering from 
+FXP_INT_BITS to FXP_INT_BITS_M1 -> still no asserts. If lowering one 
+more, then asserts do occur.
+
+So far bkm_emode always running FXP_INT_BITS loops. And yes that must 
+remain, lowering it by even one does brings asserts right away in sqrt.
+
+Clean up of a few variables no longer used in fxp.c.
+
+
+2023-05-11
+
+Debugged bit-shift operations in ulongys, added some additional tests for them.
+
+powxy_l and powxy now implemented.
+
+Test runs show clearly that ensuring a precise powxy() function is a lot 
+more demanding than ensuring precision for the individual ln, exp, log10 
+and pow10 functions. For the latter, tuple.pong as unsigned int (instead 
+of ulongy or long) was good enough to allow test runs with zero warnings 
+for all log and pow functions using WDELTA=2, WDELTA_MAX=1. But for the 
+powxy() functions, those values are nowhere near enough to prevent 
+warnings/asserts. Ultimately had to raise the MAX to >6.5.
+
+Btw changed the scheme to define the delta control values. Now defining 
+the max directly first (for 2 and 6.5 before, the max would be 13), then 
+the min value where warnings start based on the max, i.e. half of it. 
+I think this scheme is a lot clearer.
+
+
+Returning to having a dedicated tuple_l in fxp_l.c, with an unsigned long
+in it for the frac part.
+
+
+2023-05-15
+
+Checking all combinations of sign cases for powxy with extreme values.
+
+powxy_l() and powxy() implemented!
+
+While still using an uint in the tuple, max delta needs to be relaxed
+a lot, up to WDELTA_MAX=49 in order to avoid asserts for certain frac bits and
+random parameters for powxy (using SET_RAND_SEED 1, and MAX_RAND_LOOPS = 10000).
+
+Making the pow-related functions in fxp_l use tuple_l (with a ulong inside)
+instead of tuple.
+
+2023-05-18
+
+Simplified the sqrt functions calling negate_tuple() before halving it.
+
+More granularity to control the # of loops to use when calculating
+the different functions based on lg2 and pow2.
+Lg2 and pow2 themselves can use just frac_bits + 1 loops, but 
+for example ln and lg10 need 31 loops to remain warning/assert-free
+in all frac bit configs using WDELTA_MAX = 2, the sqrt requires 32 loops,
+and powxy 36. This can likely be refined further later on, not using
+the same constant # of loops for all configurations, but just like 
+FXP_lg2_maxloops, using a number of loops that depends on the current
+number of frac bits.
+
+Without a ulongy in the tuple in fxp.c, functions pow2, sqrt, and powxy
+cannot match the precision of corresponding ones in fxp_l.c.
+
+2023-05-20
+
+Separate constants for # of loops to use for lg and pow calculations
+in different functions. Using WDELTA = 3, the following values allow
+tester runs with no asserts:
+int FXP_lg2_maxloops = FXP_FRAC_BITS_DEF;           // for lg2
+const int FXP_LOGX_LOOPS = FXP_INT_BITS_M1 - 1;     // for ln and lg10
+const int FXP_POWX_LOOPS = FXP_INT_BITS_M1;         // for pow2, exp, and pow10
+const int FXP_SQRT_LOOPS = FXP_INT_BITS_M1;         // for sqrt
+const int FXP_POWXY_POW_LOOPS = FXP_INT_BITS + 1;   // for pow2 in powxy
+const int FXP_POWXY_LG_LOOPS = FXP_INT_BITS + 3;    // for lg2 in powxy
+
+The most sensitive and demanding is clearly the lg2 calculation in powxy.
+
+2023-05-21
+
+Checking different WDELTA_MAX values vs. the different number
+of loops required in particular for the lg2 calculation in powxy:
+WDELTA_MAX   FXP_POWXY_LG_LOOPS
+    1.75        +7
+    2.0         +7
+    2.025       +5
+    2.05        +4
+    2.25        +4
+    2.5         +3
+    3.0         +3
+    4.0         +3
+    8.0         +2
+
+The implemented division already requires a WDELTA_MAX >= 1.84, otherwise
+asserts can get triggered for some few problematic cases. For example,
+with 31 frac bits, x/y with the following values will trigger the assert
+if WDELTA_MAX < 1.84. This specific case is now tested in
+test_ops_with_values_of_interest():
+x      : -1046690937 =b(-).0111110011000110011110001111001
+y      : -1094861345 =b(-).1000001010000100100001000100001
+
+Using WDELTA_MAX = 3, and WDELTA_DIV = 1.2 as defaults.
+
+2023-05-22
+
+Tuples in fxp.c now again using ulongy's, so all functions in fxp.c
+now with the exact same accuracy as those in fxp_l.c
+
+Changes for better alignment in the log output, also reactivating the
+tracing of division in fxp.c when VERBOSE defined
+
+
+2023-06-03
+
+Found another troublesome case, this one for 24 frac bits (look for
+"24fb3" in fxp_tester.c:
+test_powxy("24fb3 n1,n2)", 17540200, 1730490451);
+Either WDELTA_MAX must be at least 5.1, or 
+FXP_POWXY_LG_LOOPS must be increased to at least FXP_INT_BITS + 5.
+Otherwise assert.
+Rare to hit such cases (only once after several runs with 10K random
+numbers for all frac bits configs), so commenting it out, and keeping the
+defaults the same: WDELTA_MAX 3, FXP_POWXY_LG_LOOPS = FXP_INT_BITS + 3
+
+Changed fxp_l.c to use tuple_l only for lg2_l, but super_fxp_l for
+other lg and all power functions. This makes the code for the 
+power functions simpler and also slightly faster.
+
+2023-06-05
+
+Changed fxp.c to mirror the same refactoring done in fxp_l.c:
+tuple used again but only for lg2, while super_fxp's used for
+all other functions dealing with extended precision.
+
+Variable added to the tester to control whether to avoid or not 
+extreme inputs for the powxy tests. Counting such extreme cases 
+when encountered, and showing the totals per frac bits in the 
+final table.
+
+2023-06-06
+
+fxp.c now with same refactoring as in fxp_l.c, so tuple
+only used for lg2, super_fxp's for all other functions that
+deal with the extended precision
+
+Counting extreme input cases for powxy whenever encountered,
+and added toggle variable in the tester to control whether to
+avoid or not such extreme inputs during testing.
+
+
+2023-06-20
+
+Preliminaries for trigonometrics, adding the testing skeleton
+
+2023-07-02
+
+Generation of angles and scale constants to use for CORDIC
+
+2023-07-03
+
+Detected inaccuracies in the constants (generated by fxp_tconst.c)
+when calculating the Cordic scaling factor not just from a decimal
+string expansion, but also directly inspecting the bits inside
+a calculated IEEE-754 long double (running on Arm for this).
+
+The problem was in functions bex_from_dex() and Lf_from_dec()
+in fxp_tconst.c. They were doing a division of 1.0/10.0, which means
+from double literals, instead of from long double literals (which
+need the L suffix: 1.0L/10.0L). The resulting value even if assigned
+to a long double variable, still only had double precision.
+This resulted in enough inaccuracies to creep into the lowest
+bytes in the CORDIC scaling factor, and also in all long-sized
+hexadecimal representations of the constants: lg2(10), lg2(e),
+ln(2), and log10(2), so all of these needed rectifications.
+The same problem (missing "L" suffix") affected the initialization
+of the BKM logs. Rectified these as well both on fxp.c and fxp_l.c
+Made the constants in fxp.c use the exact same frac bits
+as in fxp_l.c
+
+2023-07-04
+Using separate variables to control the max number of loops to use
+in sqrt for the lg2 calculation vs. for the pow2 calculation.
+Thanks also to the rectification of constants described above,
+now the nr. of pow2 loops in sqrt was reduced down to
+fracbits + wholebits/2 + 1, and the lg2 loops reduced to
+int bits - 2, all still allowing tester runs with no asserts.
+The xtime measurements shows the improvement in averages for
+sqrt and sqrt_l execution times because of this:
+from 2.93x and 0.34x respectively (the avg xtime of pow2 that is)
+down to 2.68x and 0.32x on Intel, and similar improvements on Arm.
+
+The new rectification of the constants also enables the tester
+to run with less warnings even when not avoiding the so called
+"extreme" inputs for powxy. However those extreme inputs still
+remain extreme of course, just as problematic, and just as
+assert-prone as ever. Uncommenting any of the two still 
+commented out worst test cases found for 24 and 23 frac bits 
+within test_powersxy() in fxp_tester() still trigger an assert
+if using the default suggested error-tolerance settings for
+WDELTA_MAX and the different *_LOOPS variables.
+
+2023-07-05
+Bit-level inspection of long doubles now also done for Intel
+processors (x86 extended Precision format, not quite the same as
+IEEE-754)
+
+2023-07-07
+Changed the code to have just one big #ifdef for ARM vs. x86 
+separating the corresponding different implementations of the
+long double inspection function in print_as_bits.c
+
+2023-07-13
+Checking precision of CORDIC using different number of loops.
+Also checking its precision when avoiding the final
+multiplication by the scaling factor K, by simply starting
+the iterations with (K, 0) instead of with (1, 0).
+The results are not actually identical, but offer the
+same precision. Number of fractional bits of precision is
+number of Cordic iterations - 1.
+
+2023-07-14
+Modifying trig.c to also support inputs beyond the
+[pi/2, -pi/2] range, so accepting same inputs just as
+sinl() and cosl() do.
+
+2023-07-28
+Added constant flag TEST_L in fxp_tester.c, controlling
+whether the fxp_l functions are to be tested or not.
+The flag gets automatically initialized as true when
+sizeof(long) >= 2 * sizeof(int)
+Added a printout of the main configuration settings at the
+beginning of the output of the tester.
+
+2023-07-31
+First drafts of cos and sin functions in fxp_l.c
+
+2023-08-03
+Representation of +/- PI requires a max of 29 frac bits,
+so at least 3 whole bits (including sign).
+
+2023-08-04
+Shifted Cordic angles from using 63 to 62 frac bits.
+Cos and sin functions in fxp_l.c implemented and tested.
+
+2023-08-10
+Added cossin_l to the fxp_xtimes.c measurements.
+Restructured the measurements outputs clustering together all
+for ints vs. all for longs.
+
+2023-08-24
+Created an alternative 2nd. implementation for cossin in fxp_l.c
+that never r-shifts negative values. It is slower though,
+at least this initial version. From runs of fxp_xtimes,
+cossin_l calculations take on average about 60%+ more time
+using this 2nd version. But r-shifting negative longs, as in
+the 1st implementation, may not work on all platforms, while
+this 2nd implementation should always work.
+For now, an #if macro in fxp_l.c chooses to use the 1st
+automatically (for speed) if r-shifting negative longs provides
+the right arithmetic shift result (e.g. #if ((-4l >> 1) == -2l))
+The choice can also be enforced manually if desired, of course.
+
+
+2024-05-03
+Wrote to Dr. T. Spiteri, author of the 'fixed' crate in Rust.
+Wrote to Dr. S. Crozet, author of the 'cordic' crate in Rust.
+
+2024-05-05
+After the suggestion from Crozet, joined the Zulip Rust
+community chat, and asked about the state of fixed points in Rust:
+https://rust-lang.zulipchat.com/#narrow/stream/122651-general
+
+2024-05-30
+Sqrt calculation using Cordic. Here initial implementation
+using long doubles to generate the scaling factors with binary128
+precision, and testing the code with different iteration depths.
+This is likely to be faster than the current sqrt implementation
+which uses lg2 and pow2. Comparison of them pending.
+
+2024-06-03
+Completed first implementation of sqrt using cordic and longs
+(function fxp_sqrt_cordic_l() in fxp_l.c)
+Determined minimum number of loops to use for sqrt_cordic
+in order to avoid asserts from the tester under WDELTA_MAX = 3.0L.
+Using "uL" as suffix for unsigned long constant definitions.
+Other minor consistency polishings of the code and output.
+
+2024-06-04
+Added fxp_sqrt_cordic_l() to the relative execution time measurements
+taken by fxp_xtimes. It calculates a square root with comparable
+accuracy taking only 42% - 48% (Arm - Intel) of the time it takes
+the sqrt_l() implementation to do it!
+The CORDIC implementation is then clearly significantly better,
+more than twice as fast compared to composing lg2 and pow2 while
+achieving the same accuracy. Its only disadvantage would be that
+it requires at least 3 whole bits, so can't be used with more than
+29 frac bits, at least not this current implementation.
+
+Renaming the sqrt functions, so fxp_sqrt_cordic_l() in fxp_l.c
+becomes fxp_sqrt_l(), so that it's the default one using longs.
+The original sqrt_l function that uses lg2 and pow2 is still kept
+and renamed as an 'alternative' with fxp_sqrt_alt_l().
+Doing the same for sqrt functions in fxp.c
+
+2024-06-05
+Added an arithmetic rshift function for ulongys (ulongy_rshift_as_signed)
+needed for the CORDIC implementation of sqrt using only ints.
+Added a simple test for it in ulongy_tester.c
+Implemented sqrt with cordic using only ints, basically mirroring
+exactly the implementation in fxp_l, just using only ints.
+Cleaned up of some comments. Removed spurious struct definitions
+that were not actually being used (fxptuple_ul, tuple_ul).
+
+
+
+
+Pending:
+Finish implementing trigonometric functions
+Add an inverse sqrt function (1 / sqrt(x))
+Saturated mode?
+Rewrite in Rust?
