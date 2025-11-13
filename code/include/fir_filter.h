@@ -4,8 +4,23 @@
 
 /**
  * @file fir_filter.h
- * @brief Macros and functions for software Fixed Point FIR Filter.
+ * @brief Macros y funciones para un software-defined Filtro FIR en punto fijo.
  */
+
+/**
+ * @mainpage Filtro FIR en Punto Fijo
+ *
+ * @section intro Introducción
+ * Este proyecto se presenta como parte práctica del trabajo final de la asignatura Técnicas Digitales III. Consiste en un Filtro FIR definido en software que posee una interfaz USB para una conexión a algún dispositivo muestreador que entregue las muestras de entrada. Utiliza un buffer de entrada para lograr el sincronismo entre el filtro y las muestras de entrada. Actualmente tanto la salida como la entrada serán escritos a archivos de datos (.csv), para generar los gráficos correspondientes de las señales de entrada y salida.
+ * 
+ *
+ * @section features Características
+ * - Programa simple en C basado en la librería FXP 
+ * - Configurable en Número de bits, truncado/redondeado, saturado/overflow
+ *
+ * @see https://github.com/rsaavedraf/fxp
+ */
+
 
 #ifndef FIR_FILTER_H
 #define FIR_FILTER_H
