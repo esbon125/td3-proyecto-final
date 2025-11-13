@@ -143,6 +143,15 @@ float FXP_max_fx = \
                         / (1uL << (FXP_FRAC_BITS_DEF))
                 + (((float) 1uL) / (1uL << FXP_FRAC_BITS_DEF)) / 2.0;
 
+
+float fxp_get_min_f() {
+        return FXP_min_f;
+}
+
+float fxp_get_max_f() {
+        return FXP_max_f;
+}
+
 double FXP_min_dx = \
                 -((double) (FXP_MAX >> FXP_FRAC_BITS_DEF) \
                     + ((double) (FXP_MAX & ((1uL << FXP_FRAC_BITS_DEF) - 1))) \
