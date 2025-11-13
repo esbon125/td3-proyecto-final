@@ -1,5 +1,6 @@
 docs/*
 !docs/*.tex
 !docs/*.bib
-*out*
+!docs/Doxyfile
+*.out
 *.o
