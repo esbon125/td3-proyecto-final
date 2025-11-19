@@ -1,5 +1,6 @@
 CC=gcc
 MAKE=make
+PROGRAM ?= fir_filter
 
 FXP_LIB=libfxp.a
 FXP_PATH=/home/esbon1253/Documents/agenda_files/data/60/219649-c148-4b1c-9e95-0464b970eac3/tpfinal/code/fxp
@@ -8,6 +9,10 @@ FXP_LIB_PATH=$(FXP_PATH)/out
 CFLAGS= -Wall -Wextra -g -I$(FXP_PATH)
 LDFLAGS=-L$(FXP_LIB_PATH) -lfxp -lm
 OUT_DIR = out
+
+ifeq ($(PROGRAM), fir_filter)
+	CFLAGS += -I../include
+endif
 
 all: run_program
 
