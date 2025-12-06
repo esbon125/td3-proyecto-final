@@ -30,8 +30,31 @@
 \section{Introducción}
 \label{sec:introduccion}
 
+Este proyecto tiene como objetivo diseñar, verificar un filtro FIR VLSI de alta velocidad hasta el nivel de síntesis para arquitecturas en serie, paralelo y polifásico, que a su vez comprenderá: realizar una investigación sobre algoritmos de filtrado, llevar a cabo una investigación exhaustiva sobre procesos estocásticos y sistemas de comunicaciones, desarrollar y verificar un simulador en punto flotante de un transmisor y receptor de un sistema de comunicaciones coherente, con la correspondiente simulación de los efectos del canal, desarrollar y verificar un simulador en punto fijo de un transmisor y receptor coherente, con la correspondiente simulación de los efectos del canal y sus respectivos filtros en el dominio del tiempo, realizar la descripción mediante HDL de un filtro FIR, realizar la verificación comportamental del filtro (vector matching) con la salida del simulador en punto fijo realizada anteriormente, realizar una optimización de nuestro filtro con alguna arquitectura VLSI específica (paralelo, serie, polifásico) y finalmente sintetizar el diseño para distintas frecuencias de clock, y comparar los reportes de área, potencia y cantidad de celdas. Este proyecto ha sido desarrollado en la empresa \textit{Marvell Argentina S.A.U}, con nombre legal \textit{Clariphy Argentina S.A}, cuyas oficinas se encuentran en la ciudad de Córdoba, Argentina en el año presente, 2025.
+
 \section{Objetivos}
 \label{sec:objetivos}
+
+\subsection{Objetivo general}
+\label{sec:obj-generales}
+
+\begin{itemize}
+\item Diseñar y verificar un filtro FIR VLSI de alta velocidad hasta el nivel de  síntesis para arquitecturas en serie, en paralelo y polifásico.
+\end{itemize}
+
+\subsection{Objetivos específicos}
+\label{sec:obj-especificos}
+\begin{itemize}
+\item Realizar una investigación sobre algoritmos de filtrado.
+\item Realizar una investigación exhaustiva sobre procesos estocásticos y sistemas de comunicaciones.
+\item Desarrollar y verificar un simulador en punto flotante de un transmisor y receptor óptico, con la correspondiente simulación de los efectos del canal.
+\item Desarrollar y verificar un simulador en punto fijo de un transmisor y receptor coherente, con la correspondiente simulación de los efectos del canal y sus respectivos filtros en el dominio del tiempo.
+\item Realizar la descripción mediante HDL de un filtro FIR.
+\item Realizar la verificación comportamental del filtro (vector matching) con la salida del simulador en punto fijo realizada anteriormente.
+\item Realizar una optimización de nuestro filtro con alguna arquitectura VLSI específica (paralelo, serie, polifásico).
+\item Sintetizar el diseño para distintas frecuencias de clock, y comparar los reportes de área, potencia y cantidad de celdas.
+
+\end{itemize}
 
 \section{Marco Teórico}
 \label{sec:marco-teorico}
@@ -39,33 +62,802 @@
 \subsection{Comunicaciones ópticas}
 \label{sec:comun-optic}
 
+
+Las comunicaciones ópticas emplean luz para transmitir información a través de fibras ópticas, haciendo uso de láseres, moduladores y fotodetectores. Frente a las comunicaciones eléctricas, ofrecen importantes ventajas:
+
+\begin{itemize}
+    \item Mayor ancho de banda.
+    \item Menor atenuación y mayores distancias.
+    \item Menor consumo energético por bit.
+    \item Inmunidad al ruido electromagnético.
+\end{itemize}
+
+Estas características han hecho que la fibra óptica sea la base de Internet y, en años recientes, un componente clave dentro de los \textit{data centers} modernos.
+
+\subsection*{Comunicaciones ópticas en \textit{data centers}}
+
+Los \textit{data centers} de hiperescala requieren enormes capacidades de transmisión. Para satisfacer esta demanda se utilizan diferentes tipos de enlaces ópticos:
+
+\subsubsection*{Enlaces de corto alcance (SR)}
+
+Usan fibra multimodo (OM3/OM4) para distancias típicas de 70--150 m. Son comunes los estándares:
+
+\begin{itemize}
+    \item 100GBASE-SR4
+    \item 200G/400G SR4 y SR8
+    \item 800G SR8 (en adopción)
+\end{itemize}
+
+\subsubsection*{Enlaces de mediano o largo alcance intra-centro (DR/FR/LR)}
+
+Basados en fibra monomodo, con distancias desde 500 m hasta varios kilómetros. Algunos ejemplos son:
+
+\begin{itemize}
+    \item 100G/200G/400G DR y FR
+    \item 400G/800G LR
+\end{itemize}
+
+\subsubsection*{Evolución de los módulos ópticos}
+
+La tendencia actual es incrementar la velocidad por carril:
+
+\[
+25~\text{Gb/s} \rightarrow 50~\text{Gb/s} \rightarrow 100~\text{Gb/s} \rightarrow 200~\text{Gb/s},
+\]
+
+usando modulación PAM4. Esto ha impulsado la migración de factores de forma:
+
+\[
+\text{QSFP28} \rightarrow \text{QSFP56} \rightarrow \text{QSFP-DD} \rightarrow \text{OSFP}.
+\]
+
+\subsubsection*{Óptica co-empaquetada (CPO)}
+
+La siguiente etapa evolutiva consiste en integrar la óptica directamente dentro del encapsulado del ASIC del \textit{switch}, reduciendo pérdidas, consumo y latencia. Empresas como Broadcom, Intel y Marvell se encuentran desarrollando activamente esta tecnología.
+\\\\
+\par Empresas como \textit{Broadcom} o \textit{Marvell} son líderes del sector cuando nos referimos a los proveedores de soluciones ópticas que permiten estos enlaces de altísima velocidad. A continuación se resume a alto nivel la tarea de estas empresas.
+ 
+\subsubsection*{Broadcom}
+
+Broadcom es uno de los mayores proveedores de ASICs Ethernet para \textit{data centers}, con familias como Tomahawk, Trident y Jericho. Entre sus contribuciones destacan:
+
+\begin{itemize}
+    \item Desarrollo de SerDes de última generación (100G y 200G PAM4).
+    \item Impulso de la óptica co-empaquetada (CPO).
+    \item Ecosistema de fotónica integrada para módulos de 400G y 800G.
+\end{itemize}
+
+\subsubsection*{Marvell}
+
+Marvell es líder en DSPs ópticos necesarios para enlaces de alta velocidad. Sus contribuciones incluyen:
+
+\begin{itemize}
+    \item DSPs PAM4 usados en módulos 400G y 800G.
+    \item Transceptores coherentes en formato pluggable (familia \textit{COLORZ}).
+    \item Desarrollo de controladores, drivers y TIAs para óptica avanzada.
+\end{itemize}
+
+En resumen:
+\begin{itemize}
+    \item Broadcom domina la conmutación Ethernet y la tecnología SerDes.
+    \item Marvell lidera en procesamiento de señal óptica y transceptores de alta capacidad.
+\end{itemize}
+
+
+\bigskip
+
+\par \textbf{En conclusión, las comunicaciones ópticas son esenciales para el funcionamiento de los \textit{data centers} modernos. La transición hacia velocidades de 800G y 1.6T depende fuertemente de la integración fotónica, los SerDes avanzados y los DSPs ópticos. Empresas como Broadcom y Marvell juegan un papel central en esta evolución tecnológica. En este proyecto se introduce específicamente en los filtros que se utilizan en los DSPs ópticos que permiten tales enlaces.}
+
+
 \subsection{Transceptores ópticos}
 \label{sec:transc-optic}
 
-\subsection{Filtros VLSI}
-\label{sec:filtros-vlsi}
+\par Conviene ahora desarrollar una fase de investigación, donde se estudiaron a fondo los sistemas de comunicación coherentes, particularmente los de tipo óptico. Esta etapa se basó ahora en la obra de referencia \cite{barry2004digital}, e implicó un estudio introductorio sobre procesos estocásticos, para luego continuar con sistemas de comunicaciones coherentes, poniendo especial énfasis en los receptores, para finalmente analizar efectos del canal en transceivers ópticos. Esta etapa además incluyó prácticas con simuladores diseñados en lenguajes de alto nivel(Matlab\textregistered, Python) que permitió corroborar lo investigación realizada.
 
-\subsection{Arquitecturas del filtro}
-\label{sec:arqu-del-filtro}
+\subsubsection*{Procesos estocásticos}
+
+El análisis y diseño de sistemas de comunicación requiere modelar las señales y el ruido como procesos aleatorios. En el marco de Barry, Lee y Messerschmitt, un proceso estocástico se describe como una familia de variables aleatorias indexadas en el tiempo $X(t)$. La caracterización más común se hace mediante funciones de autocorrelación y densidades espectrales de potencia.  
+
+Una propiedad fundamental es la \emph{ergodicidad}, que asegura que las medias temporales son representativas de las estadísticas de conjunto, permitiendo análisis prácticos en sistemas reales. El ruido aditivo blanco gaussiano (AWGN) constituye el modelo más utilizado, con densidad espectral plana y distribución normal. Matemáticamente:
+\[
+n(t) \sim \mathcal{N}(0,N_0/2), \qquad S_n(f) = \frac{N_0}{2}.
+\]
+
+Estos procesos permiten caracterizar métricas de desempeño de un receptor, como la probabilidad de error de bit (BER), que se relaciona con la distancia entre símbolos transmitidos en el espacio de señales.
+
+\subsubsection*{Típico sistema de comunicación}
+\label{sec:tipico-sistema-de-com}
+Se presentan en la Figura \ref{fig:fig100} por separado tanto transmisor como receptor ópticos coherentes típicos con su respectiva transmisión en cuadratura, donde lo que se transmite a fin de cuentas es una señal compleja.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/100.png}
+  \caption{\label{fig:fig100} Transmisor PAM de Banda Base en cuadratura. \textit{Imagen extraída de \cite{barry2004digital}. Pág. 145}}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/101.png}
+  \caption{\label{fig:fig101} Receptor PAM de Banda Base en cuadratura. \textit{Imagen extraída de \cite{barry2004digital}. Pág. 161}}
+\end{figure}
+
+
+
+\subsection*{Sistemas de Comunicación}
+
+Un sistema digital de comunicación típico consta de una fuente de información, un codificador de canal, un modulador, el canal de transmisión, un receptor coherente o no coherente, y finalmente el decodificador de canal. La cadena completa busca transmitir bits de manera confiable y eficiente en presencia de ruido e imperfecciones del canal.  
+
+En banda base, los símbolos transmitidos se representan mediante pulsos $p(t)$ escalados y desplazados temporalmente. La señal transmitida es
+\[
+s(t) = \sum_{k=-\infty}^{\infty} a_k \, p(t-kT),
+\]
+donde $a_k$ son los símbolos y $T$ el período de símbolo.  
+
+\subsubsection*{Criterio de Nyquist}
+
+Uno de los principales problemas en transmisión digital es la \textbf{interferencia intersimbólica} (ISI), causada cuando los pulsos transmitidos se solapan en el tiempo en el instante de decisión. El \textbf{criterio de Nyquist para transmisión sin ISI} establece que la respuesta total del sistema (transmisor, canal y receptor) debe cumplir:
+\[
+p(nT) = 
+\begin{cases}
+1, & n = 0, \\
+0, & n \neq 0,
+\end{cases}
+\]
+es decir, en cada instante de muestreo sólo contribuye el símbolo deseado y no los adyacentes.  
+
+En el dominio de la frecuencia, esta condición se traduce en que el espectro de la señal cumpla:
+\[
+\sum_{m=-\infty}^{\infty} P\!\left(f - \frac{m}{T}\right) = \frac{1}{T}, \qquad \forall f,
+\]
+donde $P(f)$ es la transformada de Fourier del pulso $p(t)$.  
+
+El caso ideal es el \textbf{pulso sinc}:
+\[
+p(t) = \frac{\sin(\pi t/T)}{\pi t/T},
+\]
+cuyo espectro es perfectamente limitado en banda, pero su extensión infinita en el tiempo lo hace impráctico.  
+
+%INSERTAR IMAGEN SINC con PULSOS, y representar ancho de banda mínimos
+
+En la práctica se emplean filtros de \textbf{coseno alzado (root-raised cosine)}, que permiten controlar la ocupación espectral y mantener un ISI despreciable. El parámetro de \emph{roll-off} $\alpha$ define el ancho de banda ocupado:
+\[
+B = \frac{1+\alpha}{2T}.
+\]
+
+El criterio de Nyquist asegura la eliminación del ISI, pero el ruido aditivo permanece. En canales con AWGN, la probabilidad de error de bit para modulación binaria coherente es
+\[
+P_b = Q\!\left( \sqrt{\frac{2E_b}{N_0}} \right).
+\]
+
+Una herramienta práctica para evaluar simultáneamente ISI y ruido es el \textbf{diagrama de ojo}. Superponiendo segmentos de señal de duración $T$, la apertura vertical indica la relación señal a ruido (SNR), mientras que la apertura horizontal refleja la tolerancia al jitter de muestreo. Un ojo bien abierto corresponde a un diseño que cumple el criterio de Nyquist y presenta buena robustez al ruido.
+
+En conclusión, el diseño de sistemas de comunicación exige balancear el uso eficiente del espectro mediante pulsos conformes al criterio de Nyquist, la mitigación de ISI y el control del ruido, estableciendo así la base para receptores óptimos de distancia mínima.
+
+\subsubsection*{Receptores de Distancia Mínima y Receptores Coherentes}
+\label{sec:receptor-coherente}
+
+El criterio de \textbf{distancia mínima} establece que, en presencia de ruido gaussiano, el detector óptimo selecciona el símbolo cuya representación en el espacio de señales esté más cercana a la señal recibida. Para una constelación $\{s_i(t)\}$ y una señal recibida $r(t)$:
+\[
+\hat{s} = \arg \min_i \| r - s_i \|.
+\]
+
+Este principio se implementa mediante \textbf{receptores coherentes}, que requieren sincronización de fase y frecuencia con la portadora. La coherencia maximiza la relación señal a ruido en la detección, a diferencia de receptores no coherentes que dependen de métricas de energía.
+
+En sistemas prácticos, la sincronización de reloj y portadora se consigue mediante lazo de enganche de fase (PLL) y algoritmos de estimación. Los receptores coherentes permiten constelaciones de alta eficiencia espectral, como QPSK o QAM.
+
+\subsubsection*{Efectos de Canal en Sistemas Ópticos Coherentes}
+\label{sec:efectos-canal}
+
+\subsection*{Efectos físicos en comunicaciones ópticas}
+
+La transmisión óptica está sujeta a varios fenómenos físicos que limitan la capacidad de los enlaces.
+
+\subsubsection*{Dispersión cromática (CD)}
+
+La velocidad de propagación depende de la longitud de onda, causando ensanchamiento del pulso. La potencia recibida se distorsiona según:
+
+\[
+\Delta t \propto D \cdot L \cdot \Delta \lambda,
+\]
+
+donde $D$ es el parámetro de dispersión, $L$ la longitud y $\Delta \lambda$ el ancho espectral. Es especialmente crítica en fibra monomodo.
+
+\subsubsection*{Dispersión modal (MD y DMD)}
+
+Se produce en fibra multimodo, donde diferentes modos ópticos viajan a distintas velocidades. Esto limita la distancia alcanzable en enlaces SR.
+
+\subsubsection*{Atenuación}
+
+Corresponde a la pérdida de potencia óptica por unidad de distancia. Valores típicos:
+
+\begin{itemize}
+    \item $\sim 0.2~\text{dB/km}$ en fibra monomodo.
+    \item $2$--$3~\text{dB/km}$ en fibra multimodo.
+\end{itemize}
+
+\subsubsection*{Ruido del láser}
+
+Incluye:
+\begin{itemize}
+    \item Ruido de intensidad (RIN).
+    \item \textit{Chirp} o variación en frecuencia durante la modulación.
+    \item Ancho espectral del láser.
+\end{itemize}
+
+Estos efectos degradan la señal recibida y limitan la modulación PAM4.
+
+\subsubsection*{Efectos no lineales}
+
+Importantes para potencias elevadas o largas distancias. Entre ellos:
+
+\begin{itemize}
+    \item Autmodulación de fase (SPM).
+    \item Modulación cruzada de fase (XPM).
+    \item Mezcla de cuatro ondas (FWM).
+\end{itemize}
+
+\subsubsection*{Dispersión por modo de polarización (PMD)}
+
+La \emph{dispersión por modo de polarización} (PMD, del inglés \emph{Polarization Mode Dispersion}) es un efecto estocástico de la fibra óptica que surge porque las dos polarizaciones ortogonales del modo guiado (las dos \emph{principal states of polarization}, PSPs) se propagan con velocidades de grupo ligeramente diferentes. El resultado práctico es un \textbf{desplazamiento temporal entre componentes polarizados} de un pulso óptico, lo que ensancha el pulso y puede provocar interferencia entre símbolos (ISI).
+Surge por asimetrías en la fibra que provocan distintos tiempos de propagación para las polarizaciones ortogonales. Su efecto es un ensanchamiento adi
+cional del pulso.
+
+\subsubsection*{Descripción física y modelo básico del PMD}
+
+Sea una fibra idealizada con dos PSPs que tienen tiempos de llegada (tiempos de grupo) $\tau_1$ y $\tau_2$. La \emph{Differential Group Delay} (DGD) se define como
+\begin{equation}
+\tau_{\mathrm{DGD}} \;=\; |\tau_1 - \tau_2|.
+\label{eq:dgd_def}
+\end{equation}
+Un pulso de entrada que se descompone en las dos PSPs aparecerá en salida como la suma de dos réplicas del pulso desplazadas temporalmente por $\tau_{\mathrm{DGD}}$.
+
+En sistemas coherentes modernos, la detección en cuadratura permite recuperar la amplitud y fase del campo eléctrico óptico, habilitando esquemas de modulación avanzados (QPSK, $m$-QAM). Los algoritmos digitales de procesamiento de señal (DSP) compensan CD y PMD, mientras que la teoría de detección de distancia mínima continúa siendo válida en el dominio complejo del campo óptico.
+
+\bigskip
+ En conclusión, la teoría general de procesos estocásticos y receptores coherentes, desarrollada para canales eléctricos en el marco de Barry, Lee y Messerschmitt, se extiende de manera natural a sistemas ópticos coherentes, donde los efectos de canal introducen nuevos desafíos que se abordan mediante DSP y técnicas avanzadas de compensación.
+
+\subsection{Diseño y Algoritmo}
+\label{sec:diseno-y-algoritmo}
+\par En esta fase del proyecto, se estudiaron métodos de diseño de sistemas en punto fijo, ademas de distintas técnicas para la optimización de diseños como lo son las de Pipelining y el Retiming. Posteriormente, se estudió el algoritmo a ser implementado en nuestro diseño, con posibles optimizaciones del mismo para ser implementado en hardware. En la Figura \ref{fig:fig2} se observa el flujo típico de un sistema de punto fijo aplicado para el desarrollo de nuestro proyecto. Vale aclarar que el estudio se basó en la obra \cite{Khan_2013}, bibliografia de referencia para el tópico del diseño digital aplicado al procesamiento digital de señales.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.4\textwidth]{figures/2.png}
+  \caption{\label{fig:fig2} Flujo tipico de diseño de un sistema en punto fijo}
+\end{figure}
+
+
+\par Se observa que si bien el flujo consta de diversas etapas, el alcance de nuestro proyecto de diseño llega hasta el nivel de síntesis, y que lo nuestro aplica solo a una parte de hardware del sistema, particularmente la del filtro FIR que iría inmerso en un receptor coherente óptico.
+
+\pagebreak 
+
+\subsubsection*{Pipelining}
+\label{sec:pipelining}
+El \emph{pipelining} consiste en insertar registros en trayectorias críticas de un sistema con el fin de reducir el retardo combinacional por etapa y, en consecuencia, aumentar la frecuencia de reloj alcanzable.  
+
+Si un circuito tiene un retardo crítico $T_c$, la frecuencia máxima de operación es:
+\[
+f_{\max} = \frac{1}{T_c}.
+\]
+Al dividir el camino crítico en $k$ etapas mediante registros adicionales, cada etapa tiene aproximadamente $T_c/k$ de retardo, y por lo tanto:
+\[
+f'_{\max} \approx k \cdot f_{\max}.
+\]
+
+Khan enfatiza que el pipelining no altera el orden de las operaciones ni la salida funcional del sistema, pero sí aumenta la \textbf{latencia en ciclos de clock}, ya que los datos deben atravesar más registros antes de producir resultados.  
+
+En arquitecturas de filtros FIR, por ejemplo, el pipelining permite que multiplicaciones y sumas se realicen en diferentes flancos del clock, logrando una mayor velocidad de operación a costa de más registros.
+
+En la figura \ref{fig:fig4}, se muestra un simple ejemplo donde se introducen registros entre las muestras de entrada y las de salida a fin de disminuir el camino crítico.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/4.png}
+  \caption{\label{fig:fig4} Ejemplo de pipelining}
+\end{figure}
+
+
+\subsubsection*{Retiming}
+\label{sec:retiming}
+El \emph{retiming} es una técnica de redistribución de registros que busca optimizar el retardo máximo entre registros existentes. En lugar de añadir registros, se reubican los ya presentes dentro del grafo de operaciones, manteniendo la equivalencia funcional.  
+
+Khan lo formaliza modelando el sistema como un grafo dirigido $G=(V,E)$, donde cada nodo es una operación y cada arista representa una dependencia con un número de registros asociado $w(u,v)$. Al aplicar una función de retiming $r: V \rightarrow \mathbb{Z}$, el número de registros en una arista $(u,v)$ se actualiza a:
+\[
+w'(u,v) = w(u,v) + r(v) - r(u).
+\]
+
+De este modo, se pueden balancear trayectorias de diferente longitud, reduciendo el camino crítico y mejorando la frecuencia máxima de operación.  
+
+Un ejemplo típico que presenta Khan es el de los filtros IIR, donde el retiming puede redistribuir registros entre sumadores y multiplicadores para obtener una arquitectura de menor retardo crítico sin incrementar significativamente el número total de registros.
+
+\bigskip
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/5.png}
+  \caption{\label{fig:fig5} Retiming de un DFG con un cut-set}
+\end{figure}
+
+
+En resumen:
+\begin{itemize}
+    \item \textbf{Pipelining:} inserta registros adicionales para dividir caminos largos y aumentar $f_{\max}$.
+    \item \textbf{Retiming:} redistribuye registros existentes para balancear trayectorias críticas y mejorar el rendimiento sin alterar la funcionalidad.
+
+      
+\end{itemize}
+
+\subsection*{Algoritmo}
+\label{sec:algoritmo}
+
+\par El alogritmo implementado se trata de un Filtro FIR pensado y diseñado para un sistema de comunicaciones óptico, donde lo primordial es el cumplimiento de timing debido a las altas exigencias de velocidad y clocking en estos sistemas, como ya se conoce actualmente manejando por ejemplo velocidades de $800 \frac{GBaud}{s}$ en DSPs de tecnología coherente. A continuación se describe con detalle el algoritmo a implementar.
+
+\subsubsection*{Filtro FIR}
+\label{sec:filtro-fir}
+
+Los filtros \textbf{FIR} (Finite Impulse Response) constituyen uno de los bloques fundamentales en sistemas de procesamiento digital de señales, debido a su estabilidad incondicional y a la flexibilidad en el diseño de sus coeficientes. En el contexto de transceptores ópticos coherentes, los filtros FIR cumplen un rol esencial en la ecualización de canal y la compensación de efectos físicos de la fibra óptica, tales como la dispersión cromática, la dispersión por modo de polarización y las no linealidades.
+
+\subsubsection*{Definición y propiedades de un filtro FIR}
+
+Un filtro FIR de longitud $N$ se describe mediante la ecuación de convolución discreta:
+\begin{equation}
+  y[n] = \sum_{k=0}^{N-1} h[k] \, x[n-k],
+\label{eq:fir}
+\end{equation}
+donde $h[k]$ son los coeficientes del filtro (respuesta al impulso finita), $x[n]$ es la señal de entrada y $y[n]$ la señal de salida.  
+En la figura
+
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/9.png}
+  \caption{\label{fig:fig9} Filtro FIR con sus respectivos coeficientes y espectro}
+\end{figure}
+
+
+Entre sus propiedades más relevantes se encuentran:
+\begin{itemize}
+    \item \textbf{Estabilidad incondicional}: al ser un filtro no recursivo, siempre es estable.
+    \item \textbf{Linealidad de fase}: puede diseñarse para tener fase lineal, lo que es crucial en comunicaciones ya que evita distorsión de fase.
+    \item \textbf{Flexibilidad de diseño}: permite aproximar respuestas ideales (pasa bajas, pasa banda, ecualizadores adaptativos, etc.).
+\end{itemize}
+
+\subsubsection*{Aplicación en transceptores ópticos}
+
+En sistemas de transmisión óptica coherente, la señal recibida sufre degradaciones debido a las imperfecciones del canal. Los filtros FIR se emplean principalmente en:
+\begin{itemize}
+    \item \textbf{Compensación de dispersión cromática}: el ensanchamiento de pulsos en la fibra puede revertirse mediante filtros digitales FIR diseñados para aproximar la inversa de la respuesta de la fibra.
+    \item \textbf{Ecualización adaptativa}: algoritmos como LMS o CMA ajustan los coeficientes $h[k]$ en tiempo real, corrigiendo efectos como la dispersión por modo de polarización (PMD).
+    \item \textbf{Filtrado de ruidos y conformación de pulsos}: permiten mejorar la calidad de la señal antes de la demodulación y detección coherente.
+\end{itemize}
+
+De esta manera, los FIR son bloques imprescindibles en el \emph{DSP digital backend} de receptores ópticos modernos.
 
 \section{Desarrollo}
 \label{sec:desarrollo}
 
-\subsection{Diseño y Algoritmo}
-\label{sec:diseno-y-algoritmo}
+\subsection{Filtros VLSI}
+\label{sec:filtros-vlsi}
+
+Los filtros implementados mediante tecnologías \textit{Very Large Scale Integration} (VLSI) constituyen una solución orientada al procesamiento digital de señales en hardware dedicado. Aprovechan arquitecturas paralelas, pipelines profundos y optimizaciones a nivel de silicio que permiten alcanzar desempeño extremo en términos de velocidad, consumo energético y predictibilidad temporal. En esta sección se presentan sus características principales, sus diferencias frente a implementaciones equivalentes en software y frente a otros tipos de filtros, así como las razones por las cuales se han convertido en una opción ampliamente adoptada en la industria moderna.
+
+\subsubsection*{Principales características de los filtros VLSI}
+
+Los filtros VLSI se diseñan como circuitos digitales dedicados, optimizando tanto la ruta de datos como las unidades aritméticas. Esto permite obtener tasas de muestreo extremadamente altas, frecuencias de reloj elevadas y una latencia prácticamente constante. Características destacadas incluyen:
+
+\begin{itemize}
+    \item \textbf{Paralelismo masivo}: al estar implementados directamente en hardware, pueden realizar múltiples operaciones simultáneamente, algo que resulta costoso o limitado en procesadores tradicionales.
+    \item \textbf{Arquitecturas \textit{pipeline}}: el procesamiento por etapas reduce el tiempo crítico del circuito y permite aumentar la frecuencia de reloj.
+    \item \textbf{Optimización energética}: una implementación fija y altamente ajustada evita cálculos redundantes y reduce el consumo respecto a procesadores de propósito general.
+    \item \textbf{Predecibilidad temporal}: la latencia fija y determinista los hace especialmente útiles en sistemas de tiempo real estricto.
+\end{itemize}
+
+\subsubsection*{Diferencias entre filtros VLSI y filtros implementados en software}
+
+Los filtros digitales convencionales implementados en software (por ejemplo, sobre CPUs, GPUs o DSPs programables) ofrecen flexibilidad, pero presentan limitaciones cuando se requieren altas tasas de procesamiento. Las diferencias fundamentales son:
+
+\begin{itemize}
+    \item \textbf{Flexibilidad vs. rigidez}: el software puede reconfigurarse cambiando un algoritmo; en VLSI, la estructura del filtro está fija en el silicio. Esto implica una ventaja en optimización pero una desventaja en adaptabilidad.
+    \item \textbf{Rendimiento}: un filtro VLSI puede procesar datos a velocidades muy superiores al software debido a la ejecución paralela a nivel de compuertas lógicas.
+    \item \textbf{Consumo de energía}: los procesadores de propósito general requieren ciclos de instrucción que incorporan overhead; un circuito VLSI elimina dicho overhead, optimizando el consumo.
+    \item \textbf{Costo de desarrollo}: el software es más barato y rápido de desarrollar; un circuito VLSI requiere diseño, verificación y fabricación, lo cual implica ciclos más largos.
+\end{itemize}
+
+En síntesis, mientras que el software es adecuado para sistemas flexibles o en desarrollo, los filtros VLSI dominan cuando se prioriza la eficiencia y el rendimiento extremo.
+
+\subsubsection*{Diferencias entre filtros VLSI y otros tipos de filtros físicos}
+
+Además de los filtros digitales en software, existen también filtros analógicos pasivos o activos (RC, LC, RLC, activos con op-amps), así como filtros ópticos o acústicos. Frente a ellos, los filtros VLSI presentan diferencias esenciales:
+
+\begin{itemize}
+    \item \textbf{Precisión y estabilidad}: los filtros analógicos dependen de tolerancias de componentes, temperatura y envejecimiento; los VLSI mantienen precisión determinada por la aritmética digital.
+    \item \textbf{Reproducibilidad}: un filtro VLSI fabricado en masa es idéntico para todas las unidades, mientras que en analógico siempre existe variación paramétrica.
+    \item \textbf{Integración}: pueden integrarse junto con otros bloques digitales en un único chip (SoC), reduciendo tamaño y costo.
+    \item \textbf{Rango dinámico}: la representación digital permite rangos dinámicos amplios mediante aumento de resolución, cosa que en analógico implica mayor complejidad o ruido térmico.
+\end{itemize}
+
+\subsubsection*{Por qué los filtros VLSI son cada vez más utilizados en la industria}
+
+El auge de los filtros VLSI en la industria se debe a avances tecnológicos y exigencias de rendimiento en aplicaciones modernas. Sus principales razones de adopción son:
+
+\begin{itemize}
+    \item \textbf{Crecimiento del procesamiento de datos}: sistemas como 5G/6G, redes ópticas coherentes, procesadores de señal para cámaras y radares requieren filtros extremadamente rápidos y energéticamente eficientes.
+    \item \textbf{Reducción en costos de fabricación}: los nodos CMOS avanzados han reducido el costo por transistor, permitiendo arquitecturas de filtrado complejas a bajo precio.
+    \item \textbf{Tiempo real y baja latencia}: en aplicaciones críticas (comunicaciones, equipamiento médico o automotriz), la latencia determinista de un filtro VLSI es un factor clave.
+    \item \textbf{Integración en SoCs y ASICs}: la posibilidad de colocar el filtro junto a procesadores, memorias y aceleradores en un mismo chip mejora el rendimiento global y reduce el consumo.
+    \item \textbf{Eficiencia energética}: la industria busca minimizar el consumo, especialmente en dispositivos móviles y sistemas embebidos. Un filtro VLSI supera ampliamente a alternativas en software en términos de energía por operación.
+\end{itemize}
 
 \subsection{Implementación}
 \label{sec:implementacion}
 
+
+\par En esta sección se describe la implementación del filtro FIR en Verilog RTL, es decir a nivel de transferencia entre registros, siempre siguiendo el flujo descrito en la Figura \ref{fig:fig2}. Primero vale decir que al tratarse de un filtro más bien genérico, la única estandarización exigida es la de Verilog 2001 (IEEE 1364-2001), que permite no sólo un estándar en la descripción del hardware sino también es requerido por las herramientas de síntesis por ejemplo para poder generar las netlists de este diseño correctamente. Para lograr tal estándar, la herramienta encargada de compilar tal código (\textit{xcelium en nuestro caso}) se configura previamente con el estándar pasado como parámetro para llevar a cabo lo que se conoce como \textit{linting}, que consiste en verificar la sintaxis del código. Por lo tanto se comprueba que el código realizado es conforme a la norma ISO.
+
+\par Como primer paso, lo ideal fue definir la arquitectura del filtro en hardware, es decir, que bloques de hardware independientes el uno del otro serían requeridos para la realización del filtro. Como se observa en la ecuación \ref{eq:fir}, claramente sumadores y multiplicadores serán necesarios. Además se requieren registros que cumplan la función de delays para las muestras, lo cual nos permite realizar la función de transferencia del filtro, que también es la respuesta al impulso $H(z)$, que al convolucionarse con las muestras de entrada nos devuelven a la salida la señal filtrada. Ahora bien, para la implementación claramente fue necesario obtener los valores de los coeficientes del mismo. Si bien esto fue automatizado con un script de Python, el procedimiento para el cálculo de los mismo fue el siguiente:
+
+\begin{enumerate}[coeff]
+\item Recibir la respuesta en frecuencia del filtro como entrada (preferentemente tanto de amplitud como de fase, pero con el de amplitud también ya es asequible). En nuestro caso, es dada por especificación del mismo (0.1 a -35dB).
+\item\label{item:1} Con esto se calculan los polos y ceros de la función de transferencia.
+\item\label{item:2} Se despeja la función de transferencia $H(z)$ con sus respectivos coeficientes y delays
+\end{enumerate}
+
+\subsubsection*{Diagrama en bloques del Filtro}
+\label{sec:diagrama-en-bloques}
+\par Una vez obtenidos los coeficientes del filtro, y, teniendo la respuesta al impulso, podemos elaborar el diagrama en bloques del mismo que depende del número de términos de la respuesta al impulso, que justamente por ser un filtro FIR, será un número finito. En la Figura \ref{fig:fig11} se observa dicho diagrama. Este diagrama además provee la facilidad de definir la jerarquía de archivos, donde cada bloque debería implicar un archivo distinto proveyendo un módulo cada uno.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{figures/11.png}
+  \caption{\label{fig:fig11} Diagrama en bloques de un Filtro FIR}
+\end{figure}
+
+\par A tener en consideración aquí, si bien no aparece en el diagrama, justo antes de la salida hay un ``bloque'' de saturado/truncado, solo que no se lo incluye por simplicidad, y además porque es más bien una ``glue logic'' que un bloque propiamente dicho.
+
+\subsection*{Árbol de Sumas a Nivel Hardware}
+\par Cuando hablamos de multiplicadores, no hacemos más que seguir hablando de sumadores(al menos en VLSI). Por eso es que aparece el concepto de árbol de sumas. Éste resulta un trabajo muy importante para el diseñador, al igual que el clock tree, aunque en este proyecto no nos correspondía realizar tal tarea debido al alcance del mismo. Básicamente, el filtro iría embebido en un chip mucho más grande con distintos bloques, entonces el árbol de clock debe realizarse a un nivel mucho más alto teniendo en cuenta los bloques con requerimientos críticos de timing.
+
+Un \textit{árbol de sumas} (\textit{adder tree}) es una arquitectura digital ampliamente utilizada para realizar la suma de múltiples operandos en hardware de manera eficiente. A diferencia de una suma secuencial que acumula término por término en una única unidad aritmética, el árbol de sumas emplea múltiples sumadores dispuestos jerárquicamente, permitiendo que varias operaciones se ejecuten en paralelo y reduciendo significativamente la latencia total. Esta estructura resulta fundamental en filtros VLSI, procesadores de señal, aceleradores de IA y unidades aritméticas de propósito específico.
+
+\subsubsection*{Estructura y Funcionamiento}
+
+El árbol de sumas se organiza de manera jerárquica, donde en cada nivel los sumadores combinan pares de operandos. Dados $N$ valores de entrada, el árbol se construye mediante niveles sucesivos hasta obtener un único resultado. En el caso más común, cuando $N$ es potencia de dos, la estructura es perfectamente balanceada.
+
+\[
+\text{Si } N = 2^k, \quad \text{la profundidad del árbol es } k = \log_{2}(N).
+\]
+
+Cada nivel reduce a la mitad la cantidad de resultados parciales:
+
+\[
+N \rightarrow \frac{N}{2} \rightarrow \frac{N}{4} \rightarrow \dots \rightarrow 1.
+\]
+
+De esta forma, la latencia del circuito ya no es proporcional al número de sumandos, sino a la profundidad del árbol, lo que permite alcanzar altos anchos de banda en procesamiento de datos.
+
+\subsubsection*{Ventajas}
+
+El uso de un árbol de sumas presenta varias ventajas clave:
+
+\begin{itemize}
+    \item \textbf{Latencia reducida}: la operación se completa en aproximadamente $\log_2(N)$ pasos lógicos, en comparación con los $N$ pasos de una acumulación secuencial.
+    \item \textbf{Paralelismo inherente}: múltiples sumadores operan simultáneamente en cada nivel.
+    \item \textbf{Facilidad de pipeline}: cada nivel del árbol puede registrarse, permitiendo alcanzar altas frecuencias de reloj.
+    \item \textbf{Escalabilidad}: se adapta bien al aumento del número de entradas sin incrementar excesivamente la ruta crítica.
+\end{itemize}
+
+\subsubsection*{Implementaciones Comunes}
+
+Existen distintas variantes de árboles de sumas según el tipo de sumadores utilizados y el balance entre área, latencia y frecuencia:
+
+\begin{itemize}
+    \item \textbf{Árbol binario simple}: usa sumadores completos comunes. Adecuado para implementaciones compactas.
+    \item \textbf{Árbol de sumadores carry-save (CSA)}: reduce la latencia lógica al evitar la propagación de acarreo en los niveles intermedios. Frecuente en multiplicadores y unidades MAC.
+    \item \textbf{Redes Wallace y Dadda}: optimizan la reducción de múltiples operandos seleccionando la mínima cantidad de sumadores por nivel. Son implementaciones no estrictamente arboladas pero conceptualmente similares en propósito.
+    \item \textbf{Árboles pipelined}: registran los niveles intermedios para operar a frecuencias muy elevadas, típicos en filtros FIR VLSI o procesadores vectoriales.
+\end{itemize}
+
+\subsubsection*{Consideraciones de Diseño}
+
+Durante el diseño de un árbol de sumas en hardware es necesario considerar:
+
+\begin{itemize}
+    \item \textbf{Ancho de palabra}: cada nivel puede requerir un bit adicional para acomodar los acarreos.
+    \item \textbf{Consumo y área}: mayor paralelismo implica más sumadores físicos. El diseñador debe equilibrar latencia y recursos.
+    \item \textbf{Balanceo del árbol}: un árbol desbalanceado incrementa la latencia al alargar la ruta crítica.
+    \item \textbf{Enrutamiento y temporización}: en VLSI, las conexiones entre niveles pueden convertirse en cuellos de botella si no se optimizan.
+\end{itemize}
+
+\par En conclusión, el árbol de sumas resulta una imprescindible optimización de la operación de suma que permite ahorrarse pasos respecto a una secuencia de sumas. En nuestro caso se optó por el árbol de sumas más básicos que no requirió agrupación de bits, es decir un árbol binario simple.
+
+\subsubsection*{Definición de parámetros}
+\label{sec:defin-de-param}
+
+\par Luego de haber definido nuestro árbol de sumas, corresponde analizar nuestro diagrama en bloques, y definir los siguientes parámetros y el tratamiento de los mismos en nuestro diseño, especialmente por tratarse de un diseño de punto fijo. Vale destacar una vez más que por ser un filtro que podría llegar a ser instanciado en distintos bloques con distintos propósitos, fue necesario volver parametrizables estos valores, es decir que cuando se hace una instancia de este filtro, uno debe pasar los valores de estos parámetros (de no pasarse dichos valores se generan unos default, que usamos a nuestra conveniencia). Por esto la parametrización le da además una gran portabilidad  a nuestro diseño, que con relativa facilidad puede ser instanciado en cualquier otro bloque que lo requiera.
+
+\begin{itemize}
+\item Número de bits de entrada: parametrizable, por defecto 9,
+\item Número de bits de salida: parametrizable, por defecto 10,
+\item Número de bits fraccionales de entrada: parametrizable, por defecto 7,
+\item Número de bits fraccionales de salida: parametrizable, por defecto 8,
+\item Saturado/Overflow: parametrizable, por defecto Saturado,
+\item Truncado/Redondeo: parametrizable, por defecto Truncado,
+\item Número de taps: número de taps del filtro, parametrizable, por defecto 4.  
+\end{itemize}
+
+Para definir estos parámetros, se consideraron cuestiones tanto del algoritmo como de la realizabilidad del diseño. Principalmente se consideró el ya conocido \textit{ruido de cuantización}, que depende del número de bits elegido. Para la verificación de este detalle en nuestro diseño, se graficó la respuesta en frecuencia para distintos BERs, que es la cuantificación del ruido antes mencionado, y se eligió el mínimo valor de BER que permitía cumplir la especificación de la respuesta en frecuencia. Por eso es que la cantidad de bits a la salida es superior a la de entrada, porque los valores intermedios generados en las sumas y multiplicaciones introducen parte de este ruido que compensamos con el número de bits. Recordemos que todos los valores son signados. Esto explica porque son 8 bits y 7 fraccionales para los coeficientes. Ya que el nivel de amplificación del filtro debe ser mandatoriamente 1, $|H(z)|=1$, los coeficientes no podrán superar nunca la unidad, y por el contrario mientras más taps tengamos más se irán dispersando los valores, es decir que el máximo valor de los coeficientes será cada vez menor, recordando que cada muestra debe multiplicarse por cada uno de ellos, es decir \textit{dividirse} entre todos los pesos de los coeficientes.
+
+\par En cuanto al tipo de sumador utilizado, sabemos que existen muchos tipos y de diversa utilidad, pero en este caso al utilizar RTL, podemos dejarlo al arbitrio de la herramienta de síntesis que optimiza automáticamente según alguna directiva (puede ser para timing, para velocidad, para área, potencia). En este caso como decimos desde el principio donde lo primordial es que se propague correctamente el clock, elegimos la directiva de timing para optimizar nuestro diseño y particularmente nuestros sumadores. Prediciendo entonces lo que haría la herramienta podemos decir que debe ser un sumador con mínimo camino crítico, es decir delay combinacional. Para este caso podría usarse entonces por ejemplo un CSA (Carry Save Adder) y quedaría totalmente descartado un RCA (Ripple Carry Adder).
+
+\par Finalmente se procedió con el diseño de cada bloque teniendo en cuenta todo lo anteriormente mencionado para que por último se instancien todos los bloques en módulo toplevel llamada firFilter.v que será usado en los testbenches. Este fue el típico procedimiento utilizado en el diseño digital de bloques en punto fijo.
+
 \subsection{Verificación}
 \label{sec:verificacion}
+Para la verificación de un diseño digital existen distintas metodologías como lo son UVM y Vector Matching que a su vez puede tratarse de un Directed Testing o de Random Testing (que siempre será pseudo-random en sistemas deterministas). Para nuestro diseño se optó algo común en la industria, especialmente en entornos de vanguardia donde configurar un entorno y más aún agentes de UVM puede resultar muy costoso, es decir, Vector Matching. Para ello se requiere básicamente el desarrollo de un modelo exacto de nuestro diseño programado ya sea en alto o bajo nivel que simule el comportamiento del mismo. Como se dijo antes se suele usar esta metodología en cuestiones muy de vanguardia debido a que hay una co-verificación (el diseño testea al simulador y viceversa). Es un trabajo conjunto usualmente entre quienes desarrollan el algoritmo y los diseñadores digitales. A continuación se describe este procedimiento tanto en punto flotante como en punto fijo, pasos necesarios para la mayoría de proyectos.
+
+
+\subsubsection{Simulador Punto Flotante}
+\label{sec:sim-punto-flotante}
+El desarrollo de algoritmos en MATLAB o Python siguiendo pautas estrictas de codificación resulta esencial cuando se busca implementar un \textbf{simulador de un sistema en punto flotante}. La organización modular del código, con interfaces bien definidas y estructuras claras para configuraciones, constantes y estados internos, facilita la validación del comportamiento numérico del sistema bajo diferentes condiciones de precisión. Al procesar datos en bloques, el simulador puede emular de manera realista el flujo de información en hardware digital, permitiendo observar cómo las operaciones en punto flotante influyen en la estabilidad, el ruido numérico y el desempeño general del sistema. La inicialización adecuada de todos los estados garantiza además la reproducibilidad de los experimentos y una correspondencia más directa entre la simulación y una futura implementación en hardware o software embebido.
+
+\subsubsection{Simulador Punto Fijo}
+\label{sec:sim-punto-fijo}
+
+En el diseño digital de sistemas de procesamiento de señales, una consideración esencial es la representación numérica de las variables. Mientras que el \textbf{punto flotante} ofrece gran rango dinámico y facilidad en el modelado inicial, la mayoría de los sistemas embebidos y arquitecturas dedicadas utilizan \textbf{punto fijo}. Esto se debe a que el hardware en punto fijo es más económico en términos de área, consumo de potencia y velocidad de operación, mientras que los procesadores en punto flotante resultan más costosos y de mayor complejidad.
+
+En un esquema de punto fijo, los números se representan con un número finito de bits, asignando una parte a la porción entera y otra a la parte fraccional (formato $Qm.n$). Esto permite simplificar la implementación en hardware, a costa de introducir limitaciones de precisión, truncamientos y posibles saturaciones.
+
+El \textbf{simulador en punto fijo} permite reproducir el comportamiento de un sistema real en hardware, incluyendo los efectos de cuantización, truncamiento y saturación. A diferencia del simulador en punto flotante, donde las operaciones se realizan con alta precisión relativa, el punto fijo requiere una gestión explícita de escalamiento y control del rango dinámico.  
+
+Un aspecto clave en la simulación en punto fijo es el \textbf{clock}. Cada operación en hardware digital está sincronizada con un reloj maestro, por lo que el simulador debe modelar el avance de los datos ciclo a ciclo, así como los retardos generados por registros y tuberías de procesamiento. Esto asegura que la simulación refleje fielmente la implementación real.
+
+
+En la figura \ref{fig:fig110} se muestra la comparación exacta de las salidas del simulador en punto fijo desarrollado en Python con las salidas de nuestro diseño en Verilog. Esta es una forma de amplio uso en la industria actualmente, conocida como \textit{Vector Matching}.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{figures/110.png}
+  \caption{\label{fig:fig110} Vector Matching real de nuestro Filtro}
+\end{figure}
+
+
+\subsubsection*{Comparación con Punto Flotante}
+
+\begin{itemize}
+    \item \textbf{Algoritmos en punto flotante:} se desarrollan inicialmente en herramientas como MATLAB o Python. Este enfoque permite una validación funcional sin preocuparse por efectos de cuantización o saturación, aprovechando el amplio rango dinámico de la representación.
+    \item \textbf{Limitaciones del punto flotante:} los procesadores y hardware especializados en punto flotante son costosos y con mayor consumo de recursos, por lo que no siempre son viables en sistemas embebidos.
+    \item \textbf{Transición a punto fijo:} una vez que los algoritmos han sido diseñados y probados en flotante, se convierten a implementaciones en punto fijo, con ajustes de escalamiento y control de precisión.
+    \item \textbf{Implementación final:} los algoritmos se portan a procesadores en punto fijo o a hardware específico (ASIC, FPGA, DSP embebidos), donde el costo, consumo y velocidad resultan más favorables.
+\end{itemize}
+
+\subsubsection*{Importancia en el diseño}
+
+El flujo típico de diseño consiste en:
+\begin{enumerate}
+\item Modelar y validar los algoritmos en punto flotante,
+\item Traducirlos a punto fijo para capturar limitaciones de implementación real, y 
+\item Mapearlos en hardware embebido o específico. La comparación entre ambos simuladores es fundamental: el punto flotante asegura la corrección algorítmica, mientras que el punto fijo valida la viabilidad práctica bajo un clock y un hardware realistas.
+\end{enumerate}
 
 \subsection{Optimización}
 \label{sec:optimizacion}
+La optimización de nuestro diseño se realizará solo en hardware puesto que como se mencionó en los objetivos de nuestro proyecto, el algoritmo se desarrolla íntegramente en hardware, y la optimización del algoritmo queda fuera del alcance del mismo. En las siguientes secciones se analizan las distintas posibilidades de optimización para nuestro caso.
+%El tema de optimización puede ser de tres formas, estructural, del soft y del hard. Especifica cual de los tres utilizas.
+\subsubsection*{Optimización: Arquitecturas Paralelas vs. Seriales}
 
+La implementación de un filtro FIR puede adaptarse a diferentes objetivos de diseño (velocidad, área, consumo). Las dos arquitecturas clásicas son:
+
+\paragraph{Implementación Paralela}
+En una arquitectura paralela, todas las multiplicaciones y sumas se realizan simultáneamente:
+\[
+y[n] = \sum_{k=0}^{N-1} h[k] \, x[n-k].
+\]
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Alta velocidad de procesamiento (una salida por ciclo de reloj).
+    \item Adecuada para sistemas de muy alta tasa de datos, como transceptores ópticos a 100 Gb/s o superiores.
+    \item Menor latencia en comparación con implementaciones más seriales.
+\end{itemize}
+
+\textbf{Desventajas:}
+\begin{itemize}
+    \item Mayor consumo de área y potencia, debido al uso de $N$ multiplicadores y sumadores.
+    \item Menor eficiencia de hardware si la tasa de reloj requerida no es muy elevada.
+\end{itemize}
+
+\paragraph{Implementación Serial (o en Transposición)}
+En arquitecturas más seriales, las operaciones se reutilizan en diferentes ciclos de reloj, reduciendo el hardware necesario a costa de más ciclos de procesamiento.
+
+\textbf{Ventajas:}
+\begin{itemize}
+    \item Reducción significativa del área de hardware (menos multiplicadores y sumadores).
+    \item Menor consumo de potencia y mejor escalabilidad en dispositivos con recursos limitados.
+\end{itemize}
+
+\textbf{Desventajas:}
+\begin{itemize}
+    \item Mayor latencia, ya que la salida puede requerir múltiples ciclos de reloj.
+    \item Limitaciones en alcanzar tasas de muestreo muy altas, a menos que se utilice paralelización parcial o técnicas de pipeline.
+\end{itemize}
+
+\subsubsection*{Balance en transceptores ópticos}
+
+En transceptores ópticos de muy alta velocidad, a menudo se emplean estrategias híbridas: por ejemplo, dividir el filtro FIR en sub-bloques paralelos (\emph{polyphase decomposition}) para explotar tanto el paralelismo como el ahorro de recursos. Asimismo, se implementa \emph{pipelining} en las etapas de suma y multiplicación, de modo de aumentar la frecuencia de operación sin incrementar en exceso el área.
+
+En conclusión, el diseño de un filtro FIR en transceptores ópticos depende de un compromiso entre \textbf{velocidad} (favorita en arquitecturas paralelas) y \textbf{eficiencia de recursos} (favorita en arquitecturas seriales). La elección final está dictada por los requerimientos de tasa de datos, área disponible y consumo de potencia del sistema.
+
+\subsubsection{Filtro FIR Paralelo}
+\label{sec:filtro-fir-paralelo}
+
+\subsubsection*{Concepto básico}
+
+El filtro FIR de longitud $N$ se describe mediante:
+\[
+y[n] = \sum_{k=0}^{N-1} h[k] \, x[n-k].
+\]
+
+En una implementación secuencial, esta operación requiere $N$ multiplicaciones y sumas por cada muestra de entrada, realizadas dentro de un mismo período de reloj. En cambio, al paralelizar el filtro, se duplican o multiplican las unidades de procesamiento, de manera que múltiples operaciones se ejecutan simultáneamente, reduciendo el tiempo total requerido.
+
+\subsubsection*{Objetivos de la paralelización}
+
+La paralelización de un filtro FIR persigue varios fines:
+\begin{itemize}
+    \item \textbf{Aumentar la tasa de procesamiento}: es posible generar múltiples salidas en menos ciclos de reloj o procesar flujos de datos más rápidos.
+    \item \textbf{Permitir operación en altas tasas de muestreo}: indispensable en sistemas de comunicación óptica, radares o receptores inalámbricos de banda ancha.
+    \item \textbf{Reducir la latencia efectiva}: aunque cada salida requiera el mismo número de operaciones, al distribuirlas en paralelo se obtiene un resultado final más rápido.
+\end{itemize}
+
+\subsubsection*{Métodos de paralelización}
+
+Existen diversas estrategias de paralelización de filtros FIR, entre ellas:
+
+\begin{enumerate}
+    \item \textbf{Duplicación directa de hardware}: consiste en replicar multiplicadores y sumadores, de manera que cada rama del filtro procesa una parte de la convolución. Es la forma más directa, aunque también la más costosa en términos de área y consumo.
+    
+    \item \textbf{Descomposición polifase (polyphase decomposition)}: el filtro FIR se descompone en varios subfiltros de menor longitud, cada uno encargado de una fase de la señal. Esta técnica es especialmente útil en sistemas de conversión de tasa de muestreo y reduce la complejidad de la implementación.
+    
+    \item \textbf{Pipeline en estructuras paralelas}: se intercalan registros entre operaciones de multiplicación y suma para dividir la tarea en etapas, permitiendo aumentar la frecuencia de reloj sin comprometer la salida.
+\end{enumerate}
+
+\subsubsection*{Ventajas de la paralelización}
+
+\begin{itemize}
+    \item \textbf{Altas velocidades de procesamiento}: esencial en aplicaciones donde la tasa de datos excede la capacidad de una arquitectura secuencial.
+    \item \textbf{Reducción de cuellos de botella}: al distribuir las operaciones, se evita la saturación de una única unidad de cómputo.
+    \item \textbf{Compatibilidad con arquitecturas modernas}: los FPGAs y ASICs actuales permiten aprovechar el paralelismo masivo disponible.
+\end{itemize}
+
+\subsubsection*{Desventajas y limitaciones}
+
+\begin{itemize}
+    \item \textbf{Mayor consumo de área y potencia}: la replicación de hardware incrementa la complejidad del diseño.
+    \item \textbf{Complejidad de control}: coordinar múltiples ramas en paralelo requiere lógica adicional y puede introducir problemas de sincronización.
+    \item \textbf{Uso ineficiente en bajas tasas de muestreo}: si el sistema no requiere gran velocidad, la paralelización puede ser innecesaria y derrochadora en recursos.
+\end{itemize}
+En la Figura \ref{fig:fig3} se muestra la arquitectura implementada en nuestro proyecto.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/3.png}
+  \caption{\label{fig:fig3} Filtro FIR Paralelo implementado}
+\end{figure}
+
+\subsubsection{Filtro FIR Serie}
+\label{sec:filtro-fir-serie}
+
+La \textbf{implementación en serie de un filtro FIR} es una técnica que busca reducir la complejidad en hardware y el consumo de recursos al procesar las operaciones de convolución de manera secuencial, reutilizando los mismos multiplicadores y sumadores a lo largo de varios ciclos de reloj. A diferencia de la paralelización, donde se prioriza la velocidad, la implementación en serie está orientada a lograr eficiencia en área y energía, siendo una estrategia ampliamente utilizada en sistemas embebidos y dispositivos con recursos limitados.
+
+\subsubsection*{Concepto básico}
+
+El filtro FIR de longitud $N$ se describe mediante:
+\[
+y[n] = \sum_{k=0}^{N-1} h[k] \, x[n-k].
+\]
+
+En la implementación en serie, en lugar de calcular todas las multiplicaciones en paralelo, se utiliza un único (o reducido número de) multiplicador(es) y acumulador(es). Estos se reutilizan en diferentes ciclos de reloj para completar la suma ponderada de las muestras. Así, una salida completa del filtro requiere $N$ ciclos de procesamiento.
+
+\subsubsection*{Objetivos de la implementación en serie}
+
+La serialización de un filtro FIR persigue varios fines:
+\begin{itemize}
+    \item \textbf{Reducir el área de hardware}: se minimiza el número de multiplicadores y sumadores utilizados.
+    \item \textbf{Disminuir el consumo de energía}: menos componentes activos implican menor potencia.
+    \item \textbf{Facilitar la implementación en FPGAs o ASICs de bajo costo}: especialmente en aplicaciones donde la tasa de datos no exige procesamiento extremo.
+\end{itemize}
+
+\subsubsection*{Métodos de implementación en serie}
+
+Existen diferentes enfoques para realizar la implementación serial:
+
+\begin{enumerate}
+    \item \textbf{Uso de un multiplicador-acumulador (MAC)}: el núcleo básico realiza una multiplicación y acumulación por ciclo, hasta completar la salida del filtro.
+    \item \textbf{Descomposición temporal}: el cálculo de cada muestra se reparte en múltiples ciclos de reloj, ajustando la tasa de muestreo efectiva.
+    \item \textbf{Pipeline en estructuras seriales}: se intercalan registros entre operaciones de suma y multiplicación para aumentar la frecuencia de operación sin incrementar los recursos.
+\end{enumerate}
+
+\subsubsection*{Ventajas de la implementación en serie}
+
+\begin{itemize}
+    \item \textbf{Eficiencia en hardware}: uso mínimo de recursos computacionales.
+    \item \textbf{Menor consumo de potencia}: adecuado para dispositivos móviles o portátiles.
+    \item \textbf{Simplicidad de diseño}: menos lógica de control en comparación con arquitecturas paralelas complejas.
+\end{itemize}
+
+\subsubsection*{Desventajas y limitaciones}
+
+\begin{itemize}
+    \item \textbf{Menor velocidad de procesamiento}: requiere varios ciclos de reloj por cada salida.
+    \item \textbf{Mayor latencia}: la salida del filtro no está disponible de inmediato.
+    \item \textbf{Limitaciones en altas tasas de muestreo}: puede no ser apto para sistemas de comunicaciones de muy alta velocidad, como transceptores ópticos modernos.
+\end{itemize}
+A continuación en la figura \ref{fig:fig12} mostramos la implementación del filtro serie. Como pudimos ver ambas implementaciones requieren de 2 clocás, lo cual dificulta su realización práctica.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/12.png}
+  \caption{\label{fig:fig12} Filtro Serie implementado}
+\end{figure}
+ 
+\subsection{Resultados}
+\label{sec:resultados}
+A continuación mostramos los resultados para las 3 configuraciones mostradas en la sección anterior. Es importante recalcar que las 3 implementaciones cumplieron con la especificación de tener -35dB a la frecuencia relativa a la de Nyquist 0.1.
+
+\subsubsection{Diseño en Design Compiler}
+\label{sec:design-compiler}
+Esta herramienta de síntesis, a través de algoritmos y scripts automáticamente genera lo que se conoce como la ``netlist'' del circuito, que es básicamente el circuito ya realizado a nivel de compuertas con sus respectivos puertos de entrada y salida. Como observamos en las Figuras    , se trata de una red muy compleja para cuya realización no solo se tienen en cuenta conexiones sino cuestiones de área, potencia, timing y performance. Distintas directivas se le pueden dar a la herramienta para que priorice uno de los criterios anteriormente mencionados. Para poder lograr esta síntesis, es necesario siempre la utilización de una librería que defina las celdas a ser utilizadas, donde además van especificados distintos parámetros como la tecnología utilizada(tamaño de los transistores utilizados), o el tiempo de propagación de las compuertas, que son fundamentales para el fabricante del silicio. Para nuestro caso de aplicación, fue utilizada la librería Nangate OpenCell. La \textbf{Nangate Open Cell Library} (Nangate OCL) es una librería de celdas estándar abierta ampliamente utilizada en investigación y docencia para el diseño digital. Fue desarrollada por la empresa Nangate con el propósito de proporcionar un conjunto de celdas de referencia que permitan experimentar y validar flujos completos de diseño de circuitos integrados sin depender de librerías propietarias.
+\par En la Figura \ref{fig:fig6} se observan estas redes generadas para el filtro FIR directo y para el filtro FIR en serie. Cabe aclarar que el filtro paralelo no pudo ser mostrado por cuestiones de confidencialidad.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/6.png}
+  \caption{\label{fig:fig6} Diseños sintetizados en Design Compiler}
+\end{figure}
+
+
+\subsubsection{Reportes de síntesis}
+\label{sec:sintesis}
+
+\par En esta sección se muestran distintas tablas que nos muestran distintos valores después de la  sintesis, como por ejemplo el área utilizada por el diseño, el número de celdas, la potencia en uW, y el timing. Cabe aclarar que un timing negativo indica un circuito no realizable, porque dado que la señal de clock no llega a tiempo, la información sería incorrecta y el sistema no funcionaría correctamente.
+
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/8.png}
+  \caption{\label{fig:fig8} Reportes de sintesis para Filtro FIR Directo y Serie}
+\end{figure}
+
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/7.png}
+  \caption{\label{fig:fig7} Reportes de síntesis para el filtro FIR paralelo]}
+\end{figure}
 
 \section{Conclusión}
 \label{sec:conclusion}
+
+\section*{Conclusiones Comparativas: Filtro FIR Directo, Serie y Paralelo}
+
+El análisis de las diferentes arquitecturas de filtros FIR evidencia un claro compromiso entre velocidad de procesamiento, área ocupada y consumo de potencia.
+
+\subsubsection*{Filtro FIR directo}
+El \textbf{filtro FIR directo} muestra un equilibrio aceptable entre área y velocidad. A frecuencias bajas y medias, mantiene \emph{slack} positivo y un consumo moderado de potencia. Sin embargo, al aumentar la frecuencia de operación (más de 200 MHz), comienzan a aparecer problemas de temporización y el consumo crece considerablemente. Esto indica que la arquitectura directa es adecuada para sistemas de rango medio, pero no es la opción más eficiente para frecuencias extremas.
+
+\subsubsection*{Filtro FIR serie}
+El \textbf{filtro FIR serie} reduce de forma significativa el área y el número de celdas utilizadas, gracias a la reutilización de hardware (multiplicadores y sumadores). Sin embargo, este ahorro viene acompañado de mayores problemas de temporización: los valores de \emph{slack} se vuelven negativos rápidamente al aumentar la frecuencia, lo que limita el desempeño a bajas tasas de reloj. Además, aunque el área es menor, el consumo de potencia resulta elevado en frecuencias altas debido al mayor número de ciclos necesarios para completar una operación. Por lo tanto, la arquitectura serie es ventajosa en sistemas embebidos o de baja velocidad, donde la eficiencia de hardware es prioritaria.
+
+\subsubsection*{Filtro FIR paralelo}
+El \textbf{filtro FIR paralelo} (con un factor de paralelización de 2) presenta un comportamiento opuesto al serie: requiere más área y más celdas que la versión secuencial, y el consumo de potencia aumenta de forma notoria al crecer la frecuencia de operación. Sin embargo, mantiene mejor comportamiento de temporización (\emph{slack} cercano a cero o positivo hasta 500 MHz), permitiendo alcanzar frecuencias de trabajo mucho más altas que las arquitecturas serie o directa. Esto lo convierte en la alternativa más adecuada para sistemas de comunicaciones de muy alta velocidad, como transceptores ópticos o aplicaciones en banda ancha, donde la latencia y el tiempo de procesamiento son críticos.
+
+\subsubsection*{Comparación general}
+\begin{itemize}
+    \item El \textbf{filtro FIR serie} es óptimo en términos de área y simplicidad de hardware, pero no escala bien a altas frecuencias.
+    \item El \textbf{filtro FIR directo} ofrece un compromiso intermedio: puede operar en un rango medio de frecuencias con consumo moderado.
+    \item El \textbf{filtro FIR paralelo} sacrifica área y potencia para garantizar operación confiable a frecuencias muy altas, siendo el más apropiado en sistemas modernos de comunicaciones donde la velocidad es prioritaria.
+\end{itemize}
+
+En conclusión, la elección de la arquitectura FIR depende directamente del contexto de aplicación: \textbf{serie} para bajo costo y baja velocidad, \textbf{directo} para un balance intermedio, y \textbf{paralelo} para altas tasas de muestreo donde la latencia mínima y la temporización estricta son esenciales.
 
 \nocite{*}
 \bibliography{bibliografia.bib}
