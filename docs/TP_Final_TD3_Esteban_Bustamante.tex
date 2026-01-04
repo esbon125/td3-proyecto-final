@@ -496,7 +496,7 @@ El auge de los filtros VLSI en la industria se debe a avances tecnológicos y ex
 
 \par Como primer paso, lo ideal fue definir la arquitectura del filtro en hardware, es decir, que bloques de hardware independientes el uno del otro serían requeridos para la realización del filtro. Como se observa en la ecuación \ref{eq:fir}, claramente sumadores y multiplicadores serán necesarios. Además se requieren registros que cumplan la función de delays para las muestras, lo cual nos permite realizar la función de transferencia del filtro, que también es la respuesta al impulso $H(z)$, que al convolucionarse con las muestras de entrada nos devuelven a la salida la señal filtrada. Ahora bien, para la implementación claramente fue necesario obtener los valores de los coeficientes del mismo. Si bien esto fue automatizado con un script de Python, el procedimiento para el cálculo de los mismo fue el siguiente:
 
-\begin{enumerate}[coeff]
+\begin{enumerate}
 \item Recibir la respuesta en frecuencia del filtro como entrada (preferentemente tanto de amplitud como de fase, pero con el de amplitud también ya es asequible). En nuestro caso, es dada por especificación del mismo (0.1 a -35dB).
 \item\label{item:1} Con esto se calculan los polos y ceros de la función de transferencia.
 \item\label{item:2} Se despeja la función de transferencia $H(z)$ con sus respectivos coeficientes y delays
@@ -508,7 +508,7 @@ El auge de los filtros VLSI en la industria se debe a avances tecnológicos y ex
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=1\textwidth]{figures/11.png}
+  \includegraphics[width=0.7\textwidth]{figures/11.png}
   \caption{\label{fig:fig11} Diagrama en bloques de un Filtro FIR}
 \end{figure}
 
