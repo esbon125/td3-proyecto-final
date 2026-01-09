@@ -12,7 +12,7 @@
 int32_t input_buffer[MAX_INPUT_BUFFER_SIZE];// array to hold input samples
 int fxp_coeffs[MAX_N_TAPS];
 int samples = 80;
-int nb_frac = 30;
+int nb_frac = 31;
 int filter_length = 0;
 
 void print_help()
