@@ -19,7 +19,7 @@ $(FXP_LIB): $(OBJECTS)
 
 
 %.o: %.c
-	mkdir -p $(OUT_DIR)
+	@mkdir -p $(OUT_DIR)
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $(OUT_DIR)/$@  $?
 
 clean:

@@ -17,9 +17,9 @@ endif
 all: run_program
 
 $(PROGRAM): $(FXP_LIB)
-	mkdir -p $(OUT_DIR)
+	@mkdir -p $(OUT_DIR)
 	$(CC) $@.c $(CFLAGS) $(LDFLAGS) -o $(OUT_DIR)/$@ 
-
+	@cp $(OUT_DIR)/$(PROGRAM) ../utils/scripts/
 $(FXP_LIB):
 	$(MAKE) --directory=$(FXP_PATH) $@
 
