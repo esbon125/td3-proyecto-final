@@ -1,0 +1,267 @@
+#!/usr/bin/env python3
+
+import argparse
+import subprocess
+import time
+import os
+import sys
+
+# =========================
+# Constantes
+# =========================
+OUT_DIR = "out"
+INPUT_FILE = os.path.join(OUT_DIR, "input_two_tone.pcm")
+OUTPUT_FILE = os.path.join(OUT_DIR, "outputFixed.pcm")
+C_BINARY = "./fir_filter"
+
+
+# =========================
+# Ejecutor común (GUI y CLI)
+# =========================
+def run_c_filter(cmd):
+    cmd_str = " ".join(cmd)
+
+    t0 = time.perf_counter()
+    result = subprocess.run(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True
+    )
+    t1 = time.perf_counter()
+
+    exec_time_ms = (t1 - t0) * 1000.0
+
+    return cmd_str, exec_time_ms, result
+
+
+# =========================
+# Modo CLI
+# =========================
+def run_cli(args):
+    cmd = [C_BINARY] + args
+
+    # Caso ayuda (binario o wrapper)
+    if is_help_request(args):
+        result = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+
+        # Mostrar SOLO la ayuda
+        if result.stdout:
+            print(result.stdout)
+
+        if result.stderr:
+            print(result.stderr, file=sys.stderr)
+
+        return result.returncode
+
+    # Caso normal
+    cmd_str, exec_time_ms, result = run_c_filter(cmd)
+
+    print("COMANDO EJECUTADO:")
+    print(cmd_str)
+    print()
+
+    print(f"TIEMPO DE EJECUCIÓN: {exec_time_ms:.3f} ms")
+    print()
+
+    if result.stdout:
+        print("STDOUT:")
+        print(result.stdout)
+
+    if result.stderr:
+        print("STDERR:", file=sys.stderr)
+        print(result.stderr, file=sys.stderr)
+
+    return result.returncode
+
+# =========================
+# Modo GUI
+# =========================
+def run_gui():
+    # Importes tardíos (solo si se usa GUI)
+    import tkinter as tk
+    from tkinter import filedialog, messagebox
+    import numpy as np
+
+    import matplotlib
+    matplotlib.use("TkAgg")
+    from matplotlib.figure import Figure
+    from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+    FS = 48000
+    DURATION = 2.0
+    coef_file_path = None
+
+    os.makedirs(OUT_DIR, exist_ok=True)
+
+    # ---------- Funciones GUI ----------
+    def generate_signal():
+        try:
+            f1 = float(entry_f1.get())
+            f2 = float(entry_f2.get())
+        except ValueError:
+            messagebox.showerror("Error", "Frecuencias inválidas")
+            return
+
+        t = np.arange(0, DURATION, 1 / FS)
+        signal = (
+            0.45 * np.sin(2 * np.pi * f1 * t) +
+            0.45 * np.sin(2 * np.pi * f2 * t)
+        )
+
+        pcm32 = np.int32(signal * (2**31 - 1))
+        pcm32.tofile(INPUT_FILE)
+        plot_input()
+
+    def open_coeff_file():
+        nonlocal coef_file_path
+        abs_path = filedialog.askopenfilename(
+            title="Abrir archivo de coeficientes",
+            filetypes=[("PCM files", "*.pcm"), ("All files", "*.*")]
+        )
+        if abs_path:
+            coef_file_path = os.path.relpath(abs_path, start=os.getcwd())
+            label_coef.config(text=coef_file_path)
+
+    def run_filter_gui():
+        if coef_file_path is None:
+            messagebox.showerror("Error", "Seleccione coeficientes")
+            return
+
+        cmd = [
+            C_BINARY,
+            f"-fc={coef_file_path}",
+            INPUT_FILE
+        ]
+
+        cmd_str, exec_time_ms, result = run_c_filter(cmd)
+
+        show_output_popup(cmd_str, exec_time_ms, result.stdout, result.stderr)
+
+        if result.returncode == 0:
+            plot_output()
+
+    def show_output_popup(cmd, t_ms, out, err):
+        win = tk.Toplevel(root)
+        win.title("Ejecución fir_filter")
+        win.geometry("800x500")
+
+        txt = tk.Text(win, wrap="word")
+        txt.pack(fill="both", expand=True)
+
+        txt.insert("end", "COMANDO:\n", "b")
+        txt.insert("end", cmd + "\n\n")
+
+        txt.insert("end", "TIEMPO:\n", "b")
+        txt.insert("end", f"{t_ms:.3f} ms\n\n")
+
+        if out:
+            txt.insert("end", "STDOUT:\n", "b")
+            txt.insert("end", out + "\n")
+
+        if err:
+            txt.insert("end", "\nSTDERR:\n", "b")
+            txt.insert("end", err + "\n")
+
+        txt.tag_configure("b", font=("TkDefaultFont", 10, "bold"))
+        txt.config(state="disabled")
+
+    def plot_input():
+        if not os.path.exists(INPUT_FILE):
+            return
+        x = np.fromfile(INPUT_FILE, dtype=np.int32) / (2**31 - 1)
+        t = np.arange(len(x)) / FS
+        ax_in.clear()
+        ax_in.plot(t[:FS//2], x[:FS//2])
+        ax_in.set_title("Entrada")
+        ax_in.grid(True)
+        canvas.draw()
+
+    def plot_output():
+        if not os.path.exists(OUTPUT_FILE):
+            return
+        y = np.fromfile(OUTPUT_FILE, dtype=np.int32) / (2**31 - 1)
+        t = np.arange(len(y)) / FS
+        ax_out.clear()
+        ax_out.plot(t[:FS//2], y[:FS//2])
+        ax_out.set_title("Salida FIR")
+        ax_out.grid(True)
+        canvas.draw()
+
+    # ---------- GUI ----------
+    root = tk.Tk()
+    root.title("FIR Filter UTN")
+
+    frame = tk.Frame(root)
+    frame.pack(padx=10, pady=5)
+
+    tk.Label(frame, text="F1 (Hz)").grid(row=0, column=0)
+    entry_f1 = tk.Entry(frame, width=8)
+    entry_f1.insert(0, "10")
+    entry_f1.grid(row=0, column=1)
+
+    tk.Label(frame, text="F2 (Hz)").grid(row=1, column=0)
+    entry_f2 = tk.Entry(frame, width=8)
+    entry_f2.insert(0, "30")
+    entry_f2.grid(row=1, column=1)
+
+    tk.Button(frame, text="Generar", command=generate_signal)\
+        .grid(row=2, column=0, columnspan=2)
+
+    tk.Button(frame, text="Abrir coeficientes", command=open_coeff_file)\
+        .grid(row=3, column=0)
+
+    label_coef = tk.Label(frame, text="(ninguno)")
+    label_coef.grid(row=3, column=1)
+
+    tk.Button(frame, text="Filtrar", command=run_filter_gui)\
+        .grid(row=4, column=0, columnspan=2, pady=5)
+
+    fig = Figure(figsize=(7, 5))
+    ax_in = fig.add_subplot(211)
+    ax_out = fig.add_subplot(212)
+
+    canvas = FigureCanvasTkAgg(fig, master=root)
+    canvas.get_tk_widget().pack(fill="both", expand=True)
+
+    root.mainloop()
+
+
+# =========================
+# Auxiliar
+# =========================
+def is_help_request(args):
+    return (
+        not args or
+        "-h" in args or
+        "--help" in args
+    )
+
+# =========================
+# Main
+# =========================
+def main():
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("-gui", action="store_true")
+    args, remaining = parser.parse_known_args()
+
+    if args.gui:
+        run_gui()
+    else:
+        if not remaining:
+            print("Uso:")
+            print("  fir_filter_utn -gui")
+            print("  fir_filter_utn <args de fir_filter>")
+            print("  fir_filter_utn -h")            
+            sys.exit(1)
+
+        sys.exit(run_cli(remaining))
+
+
+if __name__ == "__main__":
+    main()

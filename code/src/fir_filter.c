@@ -17,7 +17,7 @@ int filter_length = 0;
 
 void print_help()
 {
-    printf("Software FIR Filter - UTN Facultad Regional La Rioja\nCopyright (C) 2025  Esteban Bustamante \n\nUsage:\nfir_filter [--NB_FRAC=<nb_frac>] [--samples=<samples_in_parallel>] -fc=<coefficient_filename>\n\nOptions: \n\n-h:\t\t\t\t\t\tPrints this screen and returns.\n--NB_FRAC=<nb_frac>\t\t\t\tNumber <nb_frac> of fractional bits of fixed point representation. Default value is 30\n--samples=<samples_in_parallel>\t\t\tThe number of samples processed in parallel per loop. Default value is 80\n-fc=<coefficient_filename>\t\t\tThe filter coefficient filename. The format should be float coefficients separated by newlines. See further information in the documentation.");
+    printf("Software FIR Filter - UTN Facultad Regional La Rioja\nCopyright (C) 2025  Esteban Bustamante \n\nUsage:\nfir_filter_utn [--NB_FRAC=<nb_frac>] [--samples=<samples_in_parallel>] -fc=<coefficient_filename>\n\nOptions: \n\n-h:\t\t\t\t\t\tPrints this screen and returns.\n--NB_FRAC=<nb_frac>\t\t\t\tNumber <nb_frac> of fractional bits of fixed point representation. Default value is 30\n--samples=<samples_in_parallel>\t\t\tThe number of samples processed in parallel per loop. Default value is 80\n-fc=<coefficient_filename>\t\t\tThe filter coefficient filename. The format should be float coefficients separated by newlines. See further information in the documentation.");
 }
 
 // FIR init
