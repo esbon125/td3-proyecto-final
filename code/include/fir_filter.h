@@ -4,24 +4,128 @@
 
 /**
  * @file fir_filter.h
- * @brief Macros y funciones para un software-defined Filtro FIR en punto fijo.
+ * @brief Macros y funciones para un Filtro FIR en software utilizando aritmética
+ *        de punto fijo.
  */
 
 /**
  * @mainpage Filtro FIR en Punto Fijo
  *
  * @section intro Introducción
- * Este proyecto se presenta como parte práctica del trabajo final de la asignatura Técnicas Digitales III. Consiste en un Filtro FIR definido en software, haciendo uso del lenguaje C. Utiliza un buffer de entrada para lograr el sincronismo entre el filtro y las muestras de entrada. Actualmente tanto la salida como la entrada serán escritos a archivos de datos en formato PCM (.pcm), que simplifica su procesamiento garantizando el uso de un estándar para generar los gráficos correspondientes de las señales de entrada y salida. Se ha generado una interfaz gráfica en Python que facilite su uso, pero también puede ser utilizado desde línea de comandos con su respectiva CLI. Junto al binario se entrega también una demo lista para correr tanto en GUI como en CLI(Ver @ref demo "Demostración").
- * 
+ *
+ * Este proyecto se presenta como parte práctica del trabajo final de la asignatura
+ * <b>Técnicas Digitales III</b>. Consiste en la implementación de un Filtro FIR
+ * (Finite Impulse Response) definido completamente en software, desarrollado en
+ * lenguaje C y orientado a sistemas digitales.
+ *
+ * El filtro opera sobre muestras de entrada representadas en formato de punto fijo,
+ * haciendo uso de la librería FXP. Para garantizar el correcto sincronismo entre
+ * las muestras de entrada y el proceso de filtrado, se emplea un buffer de entrada
+ * que permite el procesamiento por bloques de muestras en paralelo.
+ *
+ * Tanto la señal de entrada como la señal de salida del filtro se almacenan en
+ * archivos de datos en formato PCM (.pcm). Este formato simplifica el procesamiento
+ * posterior de los datos y garantiza compatibilidad con herramientas externas
+ * para la visualización y el análisis de señales.
+ *
+ * Con el objetivo de facilitar su uso y análisis, el proyecto incluye una
+ * interfaz gráfica desarrollada en Python, que permite generar señales de prueba,
+ * ejecutar el filtro y visualizar gráficamente tanto la entrada como la salida.
+ * Asimismo, el filtro puede ser ejecutado directamente desde línea de comandos
+ * mediante una interfaz CLI.
+ *
+ * Junto al binario se entrega una demostración lista para ser ejecutada tanto en
+ * modo gráfico como en modo línea de comandos
+ * (ver @ref demo "Demostración").
+ *
+ * @section architecture Arquitectura del sistema
+ *
+ * El sistema se encuentra dividido en los siguientes bloques principales:
+ *
+ * - <b>Generador de señales</b>: encargado de generar señales de prueba
+ *   (por ejemplo, tonos senoidales) y almacenarlas en formato PCM.
+ * - <b>Filtro FIR</b>: núcleo del sistema, implementado en C, que realiza el
+ *   filtrado en punto fijo utilizando coeficientes configurables.
+ * - <b>Interfaz gráfica (GUI)</b>: desarrollada en Python, permite configurar
+ *   parámetros, ejecutar el filtro y visualizar resultados.
+ * - <b>Interfaz de línea de comandos (CLI)</b>: permite ejecutar el filtro de forma
+ *   directa, facilitando su integración en scripts y pruebas automatizadas.
  *
  * @section features Características
- * - Programa simple en C basado en la librería FXP 
- * - Configurable en Número de bits, truncado/redondeado, saturado/overflow
+ *
+ * - Implementación de un filtro FIR en software.
+ * - Uso de aritmética de punto fijo mediante la librería FXP.
+ * - Configuración del número de bits fraccionales.
+ * - Procesamiento de múltiples muestras en paralelo.
+ * - Coeficientes de filtro configurables externamente.
+ * - Entrada y salida en formato PCM de 32 bits.
+ * - Visualización gráfica de:
+ *   - señal de entrada
+ *   - señal de salida
+ *   - coeficientes del filtro
+ * - Soporte para ejecución en modo GUI y modo CLI.
+ *
+ * @section usage Uso del filtro
+ *
+ * El filtro puede utilizarse de dos maneras:
+ *
+ * - Mediante una interfaz gráfica (GUI), pensada para demostraciones y análisis
+ *   visual.
+ * - Mediante una interfaz de línea de comandos (CLI), orientada a pruebas rápidas
+ *   o automatización.
  *
  * @section demo Demostración
- * 
- * @see https://github.com/rsaavedraf/fxp
+ *
+ * @subsection demo_gui Demostración en modo gráfico (GUI)
+ *
+ * Para ejecutar la demostración en modo gráfico, utilizar los siguientes comandos para ejecutar el script con la interfaz gráfica:
+ *
+ * @code{.sh}
+ * cd code/utils/scripts
+ * ./fir_filter_utn -gui
+ * @endcode
+ *
+ * Desde la interfaz gráfica es posible:
+ * - Generar señales de entrada con uno o más tonos.
+ * - Configurar la frecuencia de muestreo y amplitudes.
+ * - Cargar un archivo de coeficientes del filtro.
+ * - Ejecutar el filtro FIR.
+ * - Visualizar gráficamente la señal de entrada, la salida filtrada
+ *   y los coeficientes del filtro.
+ *
+ * @subsection demo_cli Demostración en modo línea de comandos (CLI)
+ *
+ * El filtro también puede ejecutarse directamente desde la línea de comandos. Para esto deberán tener los archivos coeficientes.pcm e input.pcm que se incluyen con el programa:
+ *
+ * @code{.sh}
+ * cd code/utils/scripts
+ * ./fir_filter -fc=coeficientes.pcm -NB-FRAC=31 --samples=80 input.pcm
+ * @endcode
+ *
+ * donde:
+ * - <b>coeficientes.pcm</b> es el archivo que contiene los coeficientes del filtro
+ *   (en formato float, uno por línea).
+ * - <b>NB-FRAC</b> indica el número de bits fraccionales utilizados.
+ * - <b>samples</b> define la cantidad de muestras procesadas en paralelo.
+ * - <b>input.pcm</b> es el archivo PCM de entrada.
+ *
+ * El archivo de salida se genera automáticamente en formato PCM y puede ser
+ * posteriormente visualizado o procesado con herramientas externas.
+ *
+ * @section todo Posibles mejoras
+ * Si bien por el alcance de este proyecto puede considerarse terminado, estas son algunas mejoras interesantes que pueden interesarle al desarrollador: 
+ * - Hacer una interfaz común a distintos periféricos para permitir distintas entradas.
+ * - Optimizar el filtro haciendo uso de threads en paralelo, lo que implicaría un mecanismo de sincronización.
+ * - Hacer uso de la librería libusb para permitir el procesamiento de datos en tiempo real, además haciendo uso de la interfaz anteriormente mencionada.
+ * @section references Referencias
+ *
+ * - Librería FXP:
+ *   @see https://github.com/rsaavedraf/fxp
+ *
+ * - Conceptos de filtros FIR:
+ *   @see https://en.wikipedia.org/wiki/Finite_impulse_response
  */
+
 // una interfaz USB para una conexión a algún dispositivo muestreador que entregue las muestras de entrada. 
 
 #ifndef FIR_FILTER_H
