@@ -2,6 +2,11 @@ docs/*
 !docs/*.tex
 !docs/*.bib
 !docs/Doxyfile
+!docs/*.html
+!docs/*.js
+!docs/*.css
+!docs/*,png
+!docs/*.jpg
 **/out
 **/*.out
 *.o
