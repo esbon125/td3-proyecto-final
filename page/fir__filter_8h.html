@@ -1,0 +1,393 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Filtro FIR en Punto Fijo: Referencia del archivo /home/esbon1253/Documents/Quinquennium/td3/tpfinal/code/include/fir_filter.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="utn_small.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">Filtro FIR en Punto Fijo<span id="projectnumber">&#160;Esteban Bustamante</span>
+   </div>
+   <div id="projectbrief">Trabajo desarrollado como trabajo final de la materia Técnicas Digitales III</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('fir__filter_8h.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Referencia del archivo fir_filter.h</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Macros y funciones para un Filtro FIR en software utilizando aritmética de punto fijo.  
+<a href="#details">Más...</a></p>
+<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+</div>
+<p><a href="fir__filter_8h_source.html">Ir al código fuente de este archivo.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
+defines</h2></td></tr>
+<tr class="memitem:a6d3c6a4484dcaac72fbfe5100c39b9b6" id="r_a6d3c6a4484dcaac72fbfe5100c39b9b6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d3c6a4484dcaac72fbfe5100c39b9b6">DELTA_ERROR</a>&#160;&#160;&#160;1e-4f</td></tr>
+<tr class="memdesc:a6d3c6a4484dcaac72fbfe5100c39b9b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Error máximo permitido en aserciones y verificaciones.  <br /></td></tr>
+<tr class="memitem:a2b0646b17aeff2a491b0a79de74cea82" id="r_a2b0646b17aeff2a491b0a79de74cea82"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b0646b17aeff2a491b0a79de74cea82">NB_FRAC</a>&#160;&#160;&#160;31</td></tr>
+<tr class="memdesc:a2b0646b17aeff2a491b0a79de74cea82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Número de bits fraccionales.  <br /></td></tr>
+<tr class="memitem:a58e95dc1eb9d6ce16f515e77beeadd58" id="r_a58e95dc1eb9d6ce16f515e77beeadd58"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58e95dc1eb9d6ce16f515e77beeadd58">NB</a>&#160;&#160;&#160;32</td></tr>
+<tr class="memdesc:a58e95dc1eb9d6ce16f515e77beeadd58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Número total de bits.  <br /></td></tr>
+<tr class="memitem:a74d669c135ddda6e3ef9d667bb2f715b" id="r_a74d669c135ddda6e3ef9d667bb2f715b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74d669c135ddda6e3ef9d667bb2f715b">NB_INT</a>&#160;&#160;&#160;(<a class="el" href="#a58e95dc1eb9d6ce16f515e77beeadd58">NB</a> - <a class="el" href="#a2b0646b17aeff2a491b0a79de74cea82">NB_FRAC</a>)</td></tr>
+<tr class="memdesc:a74d669c135ddda6e3ef9d667bb2f715b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Número de bits enteros.  <br /></td></tr>
+<tr class="memitem:a0ce016067dd23b0042727970db7ec763" id="r_a0ce016067dd23b0042727970db7ec763"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ce016067dd23b0042727970db7ec763">MAX_INPUT_LEN</a>&#160;&#160;&#160;256</td></tr>
+<tr class="memdesc:a0ce016067dd23b0042727970db7ec763"><td class="mdescLeft">&#160;</td><td class="mdescRight">Número máximo de muestras de entrada procesables en un solo ciclo.  <br /></td></tr>
+<tr class="memitem:a2783942186accfdb6ff9d116db149010" id="r_a2783942186accfdb6ff9d116db149010"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2783942186accfdb6ff9d116db149010">MAX_N_TAPS</a>&#160;&#160;&#160;256</td></tr>
+<tr class="memdesc:a2783942186accfdb6ff9d116db149010"><td class="mdescLeft">&#160;</td><td class="mdescRight">Número máximo de coeficientes (taps) soportados.  <br /></td></tr>
+<tr class="memitem:a2502d2b548954c5d6f3f7123f316b262" id="r_a2502d2b548954c5d6f3f7123f316b262"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2502d2b548954c5d6f3f7123f316b262">MAX_INPUT_BUFFER_SIZE</a>&#160;&#160;&#160;(<a class="el" href="#a2783942186accfdb6ff9d116db149010">MAX_N_TAPS</a> + <a class="el" href="#a0ce016067dd23b0042727970db7ec763">MAX_INPUT_LEN</a> - 1)</td></tr>
+<tr class="memdesc:a2502d2b548954c5d6f3f7123f316b262"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tamaño máximo del buffer de muestras de entrada.  <br /></td></tr>
+<tr class="memitem:a1da41d527b391b557b30acdc9e2cf425" id="r_a1da41d527b391b557b30acdc9e2cf425"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1da41d527b391b557b30acdc9e2cf425">MAX_FILENAME_SIZE</a>&#160;&#160;&#160;256</td></tr>
+<tr class="memdesc:a1da41d527b391b557b30acdc9e2cf425"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tamaño máximo para cadenas de nombre de archivo.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+typedefs</h2></td></tr>
+<tr class="memitem:a87796ea0dde4455a6a77de749daa785d" id="r_a87796ea0dde4455a6a77de749daa785d"><td class="memItemLeft" align="right" valign="top">typedef enum <a class="el" href="#af9bff8ff1154a04a899276af806b8586">status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a87796ea0dde4455a6a77de749daa785d">status_t</a></td></tr>
+<tr class="memdesc:a87796ea0dde4455a6a77de749daa785d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Códigos de estado de retorno.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumeraciones</h2></td></tr>
+<tr class="memitem:af9bff8ff1154a04a899276af806b8586" id="r_af9bff8ff1154a04a899276af806b8586"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9bff8ff1154a04a899276af806b8586">status_t</a> { <a class="el" href="#af9bff8ff1154a04a899276af806b8586a5bde228d9506a863d51ffbc868ff67f7">STATUS_ERROR</a> = -1
+, <a class="el" href="#af9bff8ff1154a04a899276af806b8586a7e4a42e3b6dd63708c64cf3db6f69566">STATUS_OK</a> = 0
+, <a class="el" href="#af9bff8ff1154a04a899276af806b8586a540d7ee0cb318dababf800bf07a1319a">STATUS_NULL</a> = 1
+ }</td></tr>
+<tr class="memdesc:af9bff8ff1154a04a899276af806b8586"><td class="mdescLeft">&#160;</td><td class="mdescRight">Códigos de estado de retorno.  <a href="#af9bff8ff1154a04a899276af806b8586">Más...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Funciones</h2></td></tr>
+<tr class="memitem:ad50cf43212ea44d5396f8f582aa39f02" id="r_ad50cf43212ea44d5396f8f582aa39f02"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad50cf43212ea44d5396f8f582aa39f02">firFixed</a> (int *coeffs, int *input, int *output, int length, int filterLength)</td></tr>
+<tr class="memdesc:ad50cf43212ea44d5396f8f582aa39f02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Función de filtro FIR, donde se calcula la salida para una cantidad de muestras, utilizando las muestras de entrada y los coeficientes del filtro.  <br /></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Descripción detallada</h2>
+<div class="textblock"><p>Macros y funciones para un Filtro FIR en software utilizando aritmética de punto fijo. </p>
+</div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Documentación de «define»</h2>
+<a id="a6d3c6a4484dcaac72fbfe5100c39b9b6" name="a6d3c6a4484dcaac72fbfe5100c39b9b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d3c6a4484dcaac72fbfe5100c39b9b6">&#9670;&#160;</a></span>DELTA_ERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DELTA_ERROR&#160;&#160;&#160;1e-4f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Error máximo permitido en aserciones y verificaciones. </p>
+<p>Este valor define la tolerancia utilizada para comparar resultados numéricos en pruebas, aserciones y chequeos de precisión. </p>
+
+</div>
+</div>
+<a id="a1da41d527b391b557b30acdc9e2cf425" name="a1da41d527b391b557b30acdc9e2cf425"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1da41d527b391b557b30acdc9e2cf425">&#9670;&#160;</a></span>MAX_FILENAME_SIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_FILENAME_SIZE&#160;&#160;&#160;256</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Tamaño máximo para cadenas de nombre de archivo. </p>
+<p>Define la longitud máxima permitida para almacenar rutas o nombres de archivos. </p>
+
+</div>
+</div>
+<a id="a2502d2b548954c5d6f3f7123f316b262" name="a2502d2b548954c5d6f3f7123f316b262"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2502d2b548954c5d6f3f7123f316b262">&#9670;&#160;</a></span>MAX_INPUT_BUFFER_SIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_INPUT_BUFFER_SIZE&#160;&#160;&#160;(<a class="el" href="#a2783942186accfdb6ff9d116db149010">MAX_N_TAPS</a> + <a class="el" href="#a0ce016067dd23b0042727970db7ec763">MAX_INPUT_LEN</a> - 1)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Tamaño máximo del buffer de muestras de entrada. </p>
+<p>Este tamaño contempla el solapamiento necesario entre bloques de entrada y la cantidad de coeficientes del filtro. </p>
+
+</div>
+</div>
+<a id="a0ce016067dd23b0042727970db7ec763" name="a0ce016067dd23b0042727970db7ec763"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ce016067dd23b0042727970db7ec763">&#9670;&#160;</a></span>MAX_INPUT_LEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_INPUT_LEN&#160;&#160;&#160;256</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Número máximo de muestras de entrada procesables en un solo ciclo. </p>
+<p>Limita la cantidad de muestras que pueden ser procesadas en un único bucle de procesamiento. </p>
+
+</div>
+</div>
+<a id="a2783942186accfdb6ff9d116db149010" name="a2783942186accfdb6ff9d116db149010"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2783942186accfdb6ff9d116db149010">&#9670;&#160;</a></span>MAX_N_TAPS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_N_TAPS&#160;&#160;&#160;256</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Número máximo de coeficientes (taps) soportados. </p>
+<p>Define el tamaño máximo del filtro, expresado como el número de coeficientes utilizados. </p>
+
+</div>
+</div>
+<a id="a58e95dc1eb9d6ce16f515e77beeadd58" name="a58e95dc1eb9d6ce16f515e77beeadd58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58e95dc1eb9d6ce16f515e77beeadd58">&#9670;&#160;</a></span>NB</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NB&#160;&#160;&#160;32</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Número total de bits. </p>
+<p>Define el ancho total de palabra utilizado en la representación numérica (por ejemplo, 32 bits). </p>
+
+</div>
+</div>
+<a id="a2b0646b17aeff2a491b0a79de74cea82" name="a2b0646b17aeff2a491b0a79de74cea82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b0646b17aeff2a491b0a79de74cea82">&#9670;&#160;</a></span>NB_FRAC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NB_FRAC&#160;&#160;&#160;31</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Número de bits fraccionales. </p>
+<p>Indica cuántos bits del total se utilizan para representar la parte fraccionaria en un formato de punto fijo. </p>
+
+</div>
+</div>
+<a id="a74d669c135ddda6e3ef9d667bb2f715b" name="a74d669c135ddda6e3ef9d667bb2f715b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74d669c135ddda6e3ef9d667bb2f715b">&#9670;&#160;</a></span>NB_INT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NB_INT&#160;&#160;&#160;(<a class="el" href="#a58e95dc1eb9d6ce16f515e77beeadd58">NB</a> - <a class="el" href="#a2b0646b17aeff2a491b0a79de74cea82">NB_FRAC</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Número de bits enteros. </p>
+<p>Se calcula como la diferencia entre el número total de bits y el número de bits fraccionales. </p>
+
+</div>
+</div>
+<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Documentación de «typedef»</h2>
+<a id="a87796ea0dde4455a6a77de749daa785d" name="a87796ea0dde4455a6a77de749daa785d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87796ea0dde4455a6a77de749daa785d">&#9670;&#160;</a></span>status_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef enum <a class="el" href="#af9bff8ff1154a04a899276af806b8586">status_t</a> <a class="el" href="#af9bff8ff1154a04a899276af806b8586">status_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Códigos de estado de retorno. </p>
+<p>Este enumerado define los posibles estados que pueden devolver las funciones del sistema o biblioteca. </p>
+
+</div>
+</div>
+<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Documentación de enumeraciones</h2>
+<a id="af9bff8ff1154a04a899276af806b8586" name="af9bff8ff1154a04a899276af806b8586"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9bff8ff1154a04a899276af806b8586">&#9670;&#160;</a></span>status_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#af9bff8ff1154a04a899276af806b8586">status_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Códigos de estado de retorno. </p>
+<p>Este enumerado define los posibles estados que pueden devolver las funciones del sistema o biblioteca. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Valores de enumeraciones</th></tr><tr><td class="fieldname"><a id="af9bff8ff1154a04a899276af806b8586a5bde228d9506a863d51ffbc868ff67f7" name="af9bff8ff1154a04a899276af806b8586a5bde228d9506a863d51ffbc868ff67f7"></a>STATUS_ERROR&#160;</td><td class="fielddoc"><p>Error genérico </p>
+</td></tr>
+<tr><td class="fieldname"><a id="af9bff8ff1154a04a899276af806b8586a7e4a42e3b6dd63708c64cf3db6f69566" name="af9bff8ff1154a04a899276af806b8586a7e4a42e3b6dd63708c64cf3db6f69566"></a>STATUS_OK&#160;</td><td class="fielddoc"><p>Ejecución correcta </p>
+</td></tr>
+<tr><td class="fieldname"><a id="af9bff8ff1154a04a899276af806b8586a540d7ee0cb318dababf800bf07a1319a" name="af9bff8ff1154a04a899276af806b8586a540d7ee0cb318dababf800bf07a1319a"></a>STATUS_NULL&#160;</td><td class="fielddoc"><p>Puntero nulo u objeto no inicializado </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Documentación de funciones</h2>
+<a id="ad50cf43212ea44d5396f8f582aa39f02" name="ad50cf43212ea44d5396f8f582aa39f02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad50cf43212ea44d5396f8f582aa39f02">&#9670;&#160;</a></span>firFixed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void firFixed </td>
+          <td>(</td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>coeffs</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>input</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>output</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>length</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>filterLength</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Función de filtro FIR, donde se calcula la salida para una cantidad de muestras, utilizando las muestras de entrada y los coeficientes del filtro. </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">coeffs</td><td>puntero al arreglo de coeficientes</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">input</td><td>puntero a donde se almacenan las nuevas muestras de entrada</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">output</td><td>puntero al arreglo donde se almacenará la salida calculada</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">length</td><td>cantidad de muestras a procesar en paralelo</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">filterLength</td><td>número de taps (coeficientes) del filtro </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_050edd66366d13764f98250ef6db77f6.html">code</a></li><li class="navelem"><a href="dir_f8a5fb882cc5ea0f84873b4bfbe1e42c.html">include</a></li><li class="navelem"><a href="fir__filter_8h.html">fir_filter.h</a></li>
+    <li class="footer">Generado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>
