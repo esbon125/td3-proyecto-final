@@ -135,10 +135,15 @@ Uso del filtro</h1>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="demo"></a>
 Demostración</h1>
+<p>Para la demostración de la funcionalidad el filtro en C, se generó un filtro haciendo uso de <a href="https://fiiir.com">FIIR</a>, que permite generar coeficientes para filtros arbitrarios con frecuencias de muestreo y filtrado determinadas. Para esta demostración se generó un FIR cuya respuesta al impulso coincide con un seno cardinal (sinc), con una frecuencia de muestreo de 48kHz, una frecuencia de cutoff de 2850Hz y un ancho de banda de transición de 4320Hz, el cual observando su respuesta en frecuencia, tenemos que genera una atenuación de 3dB a 0.1 frecuencia relativa a la de Nyquist, es decir (Fs/2 = 24kHz). </p><div class="image">
+<img src="demo_response_freq.png" alt=""/>
+<div class="caption">
+Respuesta en frecuencia del filtro demostración</div></div>
 <h2 class="doxsection"><a class="anchor" id="demo_gui"></a>
 Demostración en modo gráfico (GUI)</h2>
 <p>Para ejecutar la demostración en modo gráfico, utilizar los siguientes comandos para ejecutar el script con la interfaz gráfica:</p>
-<div class="fragment"><div class="line">cd code/utils/scripts</div>
+<div class="fragment"><div class="line">cd code/src &amp;&amp; make</div>
+<div class="line">cd ../utils/scripts</div>
 <div class="line">./fir_filter_utn -gui</div>
 </div><!-- fragment --><p>Desde la interfaz gráfica es posible:</p><ul>
 <li>Generar señales de entrada con uno o más tonos.</li>
@@ -149,22 +154,23 @@ Demostración en modo gráfico (GUI)</h2>
 </ul>
 <h2 class="doxsection"><a class="anchor" id="demo_cli"></a>
 Demostración en modo línea de comandos (CLI)</h2>
-<p>El filtro también puede ejecutarse directamente desde la línea de comandos:</p>
-<div class="fragment"><div class="line">cd code/utils/scripts</div>
-<div class="line">./fir_filter -fc=coeficientes.pcm --NB-FRAC=31 --samples=80 entrada.pcm</div>
+<p>El filtro también puede ejecutarse directamente desde la línea de comandos. Para esto deberán tener los archivos coeficientes.pcm e input.pcm que se incluyen con el programa:</p>
+<div class="fragment"><div class="line">cd code/src &amp;&amp; make</div>
+<div class="line">cd code/utils/scripts</div>
+<div class="line">./fir_filter -fc=coeficientes.pcm -NB-FRAC=31 --samples=80 input.pcm</div>
 </div><!-- fragment --><p>donde:</p><ul>
-<li><b>coeficientes.txt</b> es el archivo que contiene los coeficientes del filtro (en formato float, uno por línea).</li>
+<li><b>coeficientes.pcm</b> es el archivo que contiene los coeficientes del filtro (en formato float, uno por línea).</li>
 <li><b>NB-FRAC</b> indica el número de bits fraccionales utilizados.</li>
 <li><b>samples</b> define la cantidad de muestras procesadas en paralelo.</li>
-<li><b>entrada.pcm</b> es el archivo PCM de entrada.</li>
+<li><b>input.pcm</b> es el archivo PCM de entrada.</li>
 </ul>
 <p>El archivo de salida se genera automáticamente en formato PCM y puede ser posteriormente visualizado o procesado con herramientas externas.</p>
 <h1 class="doxsection"><a class="anchor" id="todo"></a>
 Posibles mejoras</h1>
-<p>Si bien por el alcance de este proyecto puede considerarse terminado, estas son algunas mejoras interesantes que pueden interesarle al desarrollador</p><ul>
+<p>Si bien por el alcance de este proyecto puede considerarse terminado, estas son algunas mejoras interesantes que pueden interesarle al desarrollador:</p><ul>
 <li>Hacer una interfaz común a distintos periféricos para permitir distintas entradas.</li>
 <li>Optimizar el filtro haciendo uso de threads en paralelo, lo que implicaría un mecanismo de sincronización.</li>
-<li>Hacer uso de la librería libusb para permitir el procesamiento de datos en tiempo real, además haciendo uso de la interfaz anteriormente mencionada.</li>
+<li>Hacer uso de la librería libusb para permitir el procesamiento de datos en tiempo real, además haciendo uso de la interfaz anteriormente mencionada. </li>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="references"></a>
 Referencias</h1>
