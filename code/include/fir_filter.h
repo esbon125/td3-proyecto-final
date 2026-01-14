@@ -75,13 +75,16 @@
  *   o automatización.
  *
  * @section demo Demostración
+ * Para la demostración de la funcionalidad el filtro en C, se generó un filtro haciendo uso de [FIIR](https://fiiir.com), que permite generar coeficientes para filtros arbitrarios con frecuencias de muestreo y filtrado determinadas. Para esta demostración se generó un FIR cuya respuesta al impulso coincide con un seno cardinal (sinc), con una frecuencia de muestreo de 48kHz, una frecuencia de cutoff de 2850Hz y un ancho de banda de transición de 4320Hz, el cual observando su respuesta en frecuencia, tenemos que genera una atenuación de 3dB a 0.1 frecuencia relativa a la de Nyquist, es decir (Fs/2 = 24kHz).
+ * @image html demo_response_freq.png "Respuesta en frecuencia del filtro demostración"
  *
  * @subsection demo_gui Demostración en modo gráfico (GUI)
  *
  * Para ejecutar la demostración en modo gráfico, utilizar los siguientes comandos para ejecutar el script con la interfaz gráfica:
  *
  * @code{.sh}
- * cd code/utils/scripts
+ * cd code/src && make
+ * cd ../utils/scripts
  * ./fir_filter_utn -gui
  * @endcode
  *
@@ -98,7 +101,8 @@
  * El filtro también puede ejecutarse directamente desde la línea de comandos. Para esto deberán tener los archivos coeficientes.pcm e input.pcm que se incluyen con el programa:
  *
  * @code{.sh}
- * cd code/utils/scripts
+ * cd code/src && make
+ * cd ../utils/scripts
  * ./fir_filter -fc=coeficientes.pcm -NB-FRAC=31 --samples=80 input.pcm
  * @endcode
  *

@@ -5,7 +5,7 @@ docs/*
 !docs/*.html
 !docs/*.js
 !docs/*.css
-!docs/*,png
+!docs/*.png
 !docs/*.jpg
 **/out
 **/*.out
