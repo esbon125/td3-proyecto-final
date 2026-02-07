@@ -14,7 +14,7 @@ ifeq ($(PROGRAM), fir_filter)
 	CFLAGS += -I../include
 endif
 
-all: run_program
+all: $(PROGRAM)
 
 $(PROGRAM): $(FXP_LIB)
 	@mkdir -p $(OUT_DIR)
