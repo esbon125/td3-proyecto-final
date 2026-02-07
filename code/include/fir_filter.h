@@ -80,9 +80,10 @@
  *
  * @subsection demo_gui Demostración en modo gráfico (GUI)
  *
- * Para ejecutar la demostración en modo gráfico, utilizar los siguientes comandos para ejecutar el script con la interfaz gráfica:
+ * Para ejecutar la demostración en modo gráfico, será necesario descargar en primer lugar la última [release](https://github.com/esbon125/td3-proyecto-final/releases), y luego utilizar los siguientes comandos para ejecutar el script con la interfaz gráfica:
  *
  * @code{.sh}
+ + 
  * cd code/src && make
  * cd ../utils/scripts
  * ./fir_filter_utn -gui
@@ -98,9 +99,10 @@
  *
  * @subsection demo_cli Demostración en modo línea de comandos (CLI)
  *
- * El filtro también puede ejecutarse directamente desde la línea de comandos. Para esto deberán tener los archivos coeficientes.pcm e input.pcm que se incluyen con el programa:
+ * El filtro también puede ejecutarse directamente desde la línea de comandos. Para esto deberán tener los archivos coeficientes.pcm e input.pcm que se incluyen con el programa, incluídos en el link de las releases. Es necesario ubicar estos archivos dentro de la carpeta td3-proyecto-final-1.6.0 que se extrae del zip descargado. Luego ejecutando estos comandos podríamos correr el programa.
  *
  * @code{.sh}
+ * cp coeficientes.pcm input.pcm ../utils/scripts/
  * cd code/src && make
  * cd ../utils/scripts
  * ./fir_filter -fc=coeficientes.pcm -NB-FRAC=31 --samples=80 input.pcm

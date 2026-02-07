@@ -141,10 +141,11 @@ Demostración</h1>
 Respuesta en frecuencia del filtro demostración</div></div>
 <h2 class="doxsection"><a class="anchor" id="demo_gui"></a>
 Demostración en modo gráfico (GUI)</h2>
-<p>Para ejecutar la demostración en modo gráfico, utilizar los siguientes comandos para ejecutar el script con la interfaz gráfica:</p>
-<div class="fragment"><div class="line">cd code/src &amp;&amp; make</div>
-<div class="line">cd ../utils/scripts</div>
-<div class="line">./fir_filter_utn -gui</div>
+<p>Para ejecutar la demostración en modo gráfico, será necesario descargar en primer lugar la última <a href="https://github.com/esbon125/td3-proyecto-final/releases">release</a>, y luego utilizar los siguientes comandos para ejecutar el script con la interfaz gráfica:</p>
+<div class="fragment"><div class="line">+ </div>
+<div class="line">  cd code/src &amp;&amp; make</div>
+<div class="line">  cd ../utils/scripts</div>
+<div class="line">  ./fir_filter_utn -gui</div>
 </div><!-- fragment --><p>Desde la interfaz gráfica es posible:</p><ul>
 <li>Generar señales de entrada con uno o más tonos.</li>
 <li>Configurar la frecuencia de muestreo y amplitudes.</li>
@@ -154,9 +155,10 @@ Demostración en modo gráfico (GUI)</h2>
 </ul>
 <h2 class="doxsection"><a class="anchor" id="demo_cli"></a>
 Demostración en modo línea de comandos (CLI)</h2>
-<p>El filtro también puede ejecutarse directamente desde la línea de comandos. Para esto deberán tener los archivos coeficientes.pcm e input.pcm que se incluyen con el programa:</p>
-<div class="fragment"><div class="line">cd code/src &amp;&amp; make</div>
-<div class="line">cd code/utils/scripts</div>
+<p>El filtro también puede ejecutarse directamente desde la línea de comandos. Para esto deberán tener los archivos coeficientes.pcm e input.pcm que se incluyen con el programa, incluídos en el link de las releases. Es necesario ubicar estos archivos dentro de la carpeta td3-proyecto-final-1.6.0 que se extrae del zip descargado. Luego ejecutando estos comandos podríamos correr el programa.</p>
+<div class="fragment"><div class="line">cp coeficientes.pcm input.pcm ../utils/scripts/</div>
+<div class="line">cd code/src &amp;&amp; make</div>
+<div class="line">cd ../utils/scripts</div>
 <div class="line">./fir_filter -fc=coeficientes.pcm -NB-FRAC=31 --samples=80 input.pcm</div>
 </div><!-- fragment --><p>donde:</p><ul>
 <li><b>coeficientes.pcm</b> es el archivo que contiene los coeficientes del filtro (en formato float, uno por línea).</li>

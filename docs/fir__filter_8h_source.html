@@ -98,52 +98,52 @@ $(function(){initNavTree('fir__filter_8h_source.html','',''); });
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">//date: 2025-11-12</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="comment">// una interfaz USB para una conexión a algún dispositivo muestreador que entregue las muestras de entrada. </span></div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="preprocessor">#ifndef FIR_FILTER_H</span></div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="preprocessor">#define FIR_FILTER_H</span></div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="preprocessor">#include &lt;string.h&gt;</span></div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span></div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a6d3c6a4484dcaac72fbfe5100c39b9b6">  149</a></span><span class="preprocessor">#define DELTA_ERROR 1e-4f</span></div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span></div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a2b0646b17aeff2a491b0a79de74cea82">  157</a></span><span class="preprocessor">#define NB_FRAC     31</span></div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span></div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a58e95dc1eb9d6ce16f515e77beeadd58">  165</a></span><span class="preprocessor">#define NB          32</span></div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span></div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a74d669c135ddda6e3ef9d667bb2f715b">  173</a></span><span class="preprocessor">#define NB_INT      (NB - NB_FRAC)</span></div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span></div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a0ce016067dd23b0042727970db7ec763">  181</a></span><span class="preprocessor">#define MAX_INPUT_LEN  256</span></div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span></div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a2783942186accfdb6ff9d116db149010">  189</a></span><span class="preprocessor">#define MAX_N_TAPS  256</span></div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span></div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a2502d2b548954c5d6f3f7123f316b262">  197</a></span><span class="preprocessor">#define MAX_INPUT_BUFFER_SIZE    (MAX_N_TAPS + MAX_INPUT_LEN - 1)</span></div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span></div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a1da41d527b391b557b30acdc9e2cf425">  205</a></span><span class="preprocessor">#define MAX_FILENAME_SIZE   256</span></div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span></div>
-<div class="foldopen" id="foldopen00213" data-start="{" data-end="};">
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586">  213</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code hl_enumeration" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586">status_t</a> {</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a5bde228d9506a863d51ffbc868ff67f7">  215</a></span>  <a class="code hl_enumvalue" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a5bde228d9506a863d51ffbc868ff67f7">STATUS_ERROR</a> = -1,</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span></div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a7e4a42e3b6dd63708c64cf3db6f69566">  218</a></span>  <a class="code hl_enumvalue" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a7e4a42e3b6dd63708c64cf3db6f69566">STATUS_OK</a> = 0,</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span></div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a540d7ee0cb318dababf800bf07a1319a">  221</a></span>  <a class="code hl_enumvalue" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a540d7ee0cb318dababf800bf07a1319a">STATUS_NULL</a> = 1</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a87796ea0dde4455a6a77de749daa785d">  222</a></span>} <a class="code hl_enumeration" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586">status_t</a>;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="comment">// una interfaz USB para una conexión a algún dispositivo muestreador que entregue las muestras de entrada. </span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span><span class="preprocessor">#ifndef FIR_FILTER_H</span></div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="preprocessor">#define FIR_FILTER_H</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="preprocessor">#include &lt;string.h&gt;</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span><span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a6d3c6a4484dcaac72fbfe5100c39b9b6">  151</a></span><span class="preprocessor">#define DELTA_ERROR 1e-4f</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a2b0646b17aeff2a491b0a79de74cea82">  159</a></span><span class="preprocessor">#define NB_FRAC     31</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span></div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a58e95dc1eb9d6ce16f515e77beeadd58">  167</a></span><span class="preprocessor">#define NB          32</span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span></div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a74d669c135ddda6e3ef9d667bb2f715b">  175</a></span><span class="preprocessor">#define NB_INT      (NB - NB_FRAC)</span></div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a0ce016067dd23b0042727970db7ec763">  183</a></span><span class="preprocessor">#define MAX_INPUT_LEN  256</span></div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span></div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a2783942186accfdb6ff9d116db149010">  191</a></span><span class="preprocessor">#define MAX_N_TAPS  256</span></div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span></div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a2502d2b548954c5d6f3f7123f316b262">  199</a></span><span class="preprocessor">#define MAX_INPUT_BUFFER_SIZE    (MAX_N_TAPS + MAX_INPUT_LEN - 1)</span></div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span></div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a1da41d527b391b557b30acdc9e2cf425">  207</a></span><span class="preprocessor">#define MAX_FILENAME_SIZE   256</span></div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span></div>
+<div class="foldopen" id="foldopen00215" data-start="{" data-end="};">
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586">  215</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code hl_enumeration" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586">status_t</a> {</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a5bde228d9506a863d51ffbc868ff67f7">  217</a></span>  <a class="code hl_enumvalue" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a5bde228d9506a863d51ffbc868ff67f7">STATUS_ERROR</a> = -1,</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span></div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a7e4a42e3b6dd63708c64cf3db6f69566">  220</a></span>  <a class="code hl_enumvalue" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a7e4a42e3b6dd63708c64cf3db6f69566">STATUS_OK</a> = 0,</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span></div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a540d7ee0cb318dababf800bf07a1319a">  223</a></span>  <a class="code hl_enumvalue" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a540d7ee0cb318dababf800bf07a1319a">STATUS_NULL</a> = 1</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno"><a class="line" href="fir__filter_8h.html#a87796ea0dde4455a6a77de749daa785d">  224</a></span>} <a class="code hl_enumeration" href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586">status_t</a>;</div>
 </div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span></div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span><span class="keywordtype">void</span> <a class="code hl_function" href="fir__filter_8h.html#ad50cf43212ea44d5396f8f582aa39f02">firFixed</a>(<span class="keywordtype">int</span> * coeffs, <span class="keywordtype">int</span> * input, <span class="keywordtype">int</span> * output,<span class="keywordtype">int</span> length, <span class="keywordtype">int</span> filterLength );</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span><span class="preprocessor">#endif </span><span class="comment">/* FIR_FILTER_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span></div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="keywordtype">void</span> <a class="code hl_function" href="fir__filter_8h.html#ad50cf43212ea44d5396f8f582aa39f02">firFixed</a>(<span class="keywordtype">int</span> * coeffs, <span class="keywordtype">int</span> * input, <span class="keywordtype">int</span> * output,<span class="keywordtype">int</span> length, <span class="keywordtype">int</span> filterLength );</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span><span class="preprocessor">#endif </span><span class="comment">/* FIR_FILTER_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="afir__filter_8h_html_ad50cf43212ea44d5396f8f582aa39f02"><div class="ttname"><a href="fir__filter_8h.html#ad50cf43212ea44d5396f8f582aa39f02">firFixed</a></div><div class="ttdeci">void firFixed(int *coeffs, int *input, int *output, int length, int filterLength)</div><div class="ttdoc">Función de filtro FIR, donde se calcula la salida para una cantidad de muestras, utilizando las muest...</div><div class="ttdef"><b>Definition</b> fir_filter.c:30</div></div>
-<div class="ttc" id="afir__filter_8h_html_af9bff8ff1154a04a899276af806b8586"><div class="ttname"><a href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586">status_t</a></div><div class="ttdeci">status_t</div><div class="ttdoc">Códigos de estado de retorno.</div><div class="ttdef"><b>Definition</b> fir_filter.h:213</div></div>
-<div class="ttc" id="afir__filter_8h_html_af9bff8ff1154a04a899276af806b8586a540d7ee0cb318dababf800bf07a1319a"><div class="ttname"><a href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a540d7ee0cb318dababf800bf07a1319a">STATUS_NULL</a></div><div class="ttdeci">@ STATUS_NULL</div><div class="ttdef"><b>Definition</b> fir_filter.h:221</div></div>
-<div class="ttc" id="afir__filter_8h_html_af9bff8ff1154a04a899276af806b8586a5bde228d9506a863d51ffbc868ff67f7"><div class="ttname"><a href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a5bde228d9506a863d51ffbc868ff67f7">STATUS_ERROR</a></div><div class="ttdeci">@ STATUS_ERROR</div><div class="ttdef"><b>Definition</b> fir_filter.h:215</div></div>
-<div class="ttc" id="afir__filter_8h_html_af9bff8ff1154a04a899276af806b8586a7e4a42e3b6dd63708c64cf3db6f69566"><div class="ttname"><a href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a7e4a42e3b6dd63708c64cf3db6f69566">STATUS_OK</a></div><div class="ttdeci">@ STATUS_OK</div><div class="ttdef"><b>Definition</b> fir_filter.h:218</div></div>
+<div class="ttc" id="afir__filter_8h_html_af9bff8ff1154a04a899276af806b8586"><div class="ttname"><a href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586">status_t</a></div><div class="ttdeci">status_t</div><div class="ttdoc">Códigos de estado de retorno.</div><div class="ttdef"><b>Definition</b> fir_filter.h:215</div></div>
+<div class="ttc" id="afir__filter_8h_html_af9bff8ff1154a04a899276af806b8586a540d7ee0cb318dababf800bf07a1319a"><div class="ttname"><a href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a540d7ee0cb318dababf800bf07a1319a">STATUS_NULL</a></div><div class="ttdeci">@ STATUS_NULL</div><div class="ttdef"><b>Definition</b> fir_filter.h:223</div></div>
+<div class="ttc" id="afir__filter_8h_html_af9bff8ff1154a04a899276af806b8586a5bde228d9506a863d51ffbc868ff67f7"><div class="ttname"><a href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a5bde228d9506a863d51ffbc868ff67f7">STATUS_ERROR</a></div><div class="ttdeci">@ STATUS_ERROR</div><div class="ttdef"><b>Definition</b> fir_filter.h:217</div></div>
+<div class="ttc" id="afir__filter_8h_html_af9bff8ff1154a04a899276af806b8586a7e4a42e3b6dd63708c64cf3db6f69566"><div class="ttname"><a href="fir__filter_8h.html#af9bff8ff1154a04a899276af806b8586a7e4a42e3b6dd63708c64cf3db6f69566">STATUS_OK</a></div><div class="ttdeci">@ STATUS_OK</div><div class="ttdef"><b>Definition</b> fir_filter.h:220</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
