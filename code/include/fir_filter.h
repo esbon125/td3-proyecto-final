@@ -82,8 +82,7 @@
  *
  * Para ejecutar la demostración en modo gráfico, será necesario descargar en primer lugar la última [release](https://github.com/esbon125/td3-proyecto-final/releases), y luego utilizar los siguientes comandos para ejecutar el script con la interfaz gráfica:
  *
- * @code{.sh}
- + 
+ * @code{.sh} 
  * cd code/src && make
  * cd ../utils/scripts
  * ./fir_filter_utn -gui
