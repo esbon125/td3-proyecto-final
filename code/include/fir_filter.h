@@ -75,7 +75,7 @@
  *   o automatización.
  *
  * @section demo Demostración
- * Para la demostración de la funcionalidad el filtro en C, se generó un filtro haciendo uso de [FIIR](https://fiiir.com), que permite generar coeficientes para filtros arbitrarios con frecuencias de muestreo y filtrado determinadas. Para esta demostración se generó un FIR cuya respuesta al impulso coincide con un seno cardinal (sinc), con una frecuencia de muestreo de 48kHz, una frecuencia de cutoff de 2850Hz y un ancho de banda de transición de 4320Hz, el cual observando su respuesta en frecuencia, tenemos que genera una atenuación de 3dB a 0.1 frecuencia relativa a la de Nyquist, es decir (Fs/2 = 24kHz).
+ * Para la demostración de la funcionalidad el filtro en C, se generó un filtro haciendo uso de [FIIR](https://fiiir.com), que permite generar coeficientes para filtros arbitrarios con frecuencias de muestreo y filtrado determinadas. Para esta demostración se generó un FIR cuya respuesta al impulso coincide con un seno cardinal (sinc), con una frecuencia de muestreo de 48kHz, una frecuencia de cutoff de 800Hz y un ancho de banda de transición de 3840Hz, el cual observando su respuesta en frecuencia, tenemos que genera una atenuación de 35dB a 0.1 frecuencia relativa a la de Nyquist, es decir ((0.1)Fs/2 = 2.4kHz).
  * @image html demo_response_freq.png "Respuesta en frecuencia del filtro demostración"
  *
  * @subsection demo_gui Demostración en modo gráfico (GUI)
