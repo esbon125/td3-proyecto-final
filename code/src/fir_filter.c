@@ -15,6 +15,8 @@ int samples = 80;
 int nb_frac = 31;
 int filter_length = 0;
 
+float scale = 0;
+
 void print_help()
 {
     printf("Software FIR Filter - UTN Facultad Regional La Rioja\nCopyright (C) 2025  Esteban Bustamante \n\nUsage:\nfir_filter_utn [--NB_FRAC=<nb_frac>] [--samples=<samples_in_parallel>] -fc=<coefficient_filename>\n\nOptions: \n\n-h:\t\t\t\t\t\tPrints this screen and returns.\n--NB_FRAC=<nb_frac>\t\t\t\tNumber <nb_frac> of fractional bits of fixed point representation. Default value is 30\n--samples=<samples_in_parallel>\t\t\tThe number of samples processed in parallel per loop. Default value is 80\n-fc=<coefficient_filename>\t\t\tThe filter coefficient filename. The format should be float coefficients separated by newlines. See further information in the documentation.");
@@ -30,9 +32,9 @@ void firFixedInit( void )
 void firFixed( int *coeffs, int *input, int *output,
 	       int length, int filterLength )
 {
-    int acc;     // accumulator for MACs
-    int *coeffp; // pointer to coefficients
-    int *inputp; // pointer to input samples
+    int64_t acc;     // accumulator for MACs
+    int *coeffp;     // pointer to coefficients
+    int *inputp;     // pointer to input samples
     int n;
     int k;
  
@@ -42,33 +44,40 @@ void firFixed( int *coeffs, int *input, int *output,
  
     // apply the filter to each input sample
     for ( n = 0; n < length; n++ ) {
+
+        acc = 0;  // FIX: inicializar acumulador en cada muestra
+
         // calculate output n
+
 	coeffp = coeffs;
         inputp = &input_buffer[filterLength - 1 + n];
+
         // load rounding constant FIXME
-	//        acc = 1 << 14;
+	// acc = 1 << 14;
+
         // perform the multiply-accumulate
         for ( k = 0; k < filterLength; k++ ) {
-            acc = fxp_add(acc, fxp_mul(*coeffp++, *inputp--));
+	    acc += ((int64_t)(*coeffp++) * (*inputp--));
+    //         acc = fxp_add(acc, fxp_mul(*coeffp++, *inputp--));
         }
+
         /* // saturate the result FIXME*/
         /* if ( acc > 0x3fffffff ) { */
         /*     acc = 0x3fffffff; */
         /* } else if ( acc < -0x40000000 ) { */
         /*     acc = -0x40000000; */
         /* } */
+
         // convert from Q30 to Q15 - which also applied rounding
-	//        output[n] = (int16_t)(acc >> 15);
-        output[n] = acc;
-	acc = 0;
+	// output[n] = (int16_t)(acc >> 15);
+
+	output[n] = (int) (acc  >> nb_frac); /// scale);  // salida en Q1.31 (sin truncado adicional)
     }
  
     // shift input samples back in time for next time
     memmove( &input_buffer[0], &input_buffer[length],
 	     (filterLength - 1) * sizeof(int) );
- 
 }
-
 uint8_t coefficients_init(FILE *coeff_file, int * fxp_coeffs)
 {
     status_t status = STATUS_OK;
@@ -77,15 +86,26 @@ uint8_t coefficients_init(FILE *coeff_file, int * fxp_coeffs)
     memset( fxp_coeffs, 0, sizeof(int) * MAX_N_TAPS); //initializing the coefficients in 0
 
     if (coeff_file == NULL) {
-	printf("Error opening file\\n");
+	printf("Error opening file\n");
 	status = STATUS_NULL;
 	return status;
     }
 
     while (fscanf(coeff_file, "%f", &coeff_f) == 1) {
+	//	printf("Float coefficient %f\n", coeff_f);
 	fxp_coeffs[filter_length] = f2fxp(coeff_f);//converting float to fxp
+	//	print_fxp(fxp_coeffs[filter_length]);
+	//	printf("\n\n");
 	filter_length++;
     }
+    int zero_count = 0;
+
+    for (int i = 0; i < filter_length; i++) {
+	if (fxp_coeffs[i] == 0)
+	    zero_count++;
+    }
+
+    //    printf("Coeficientes en cero: %d / %d\n", zero_count, filter_length);DEBUG
 
     return status;
 }
@@ -149,14 +169,23 @@ int main(int argc, char *argv[])
 
 	}
 
+    //--------------------------------------------//
+
+    //---------------FILTER CONFIGURATION APPLYING-------------//
+
+    // Set the fractional number of bits
+    if(fxp_set_frac_bits(nb_frac) != nb_frac)
+	perror("NB_FRAC setting failed!/n");
+    //--------------------------------------------//
+
+    printf("\nConfig for Filter\n\nNumber of samples: %d, Fractional bits: %d ", samples, nb_frac);
+
+    //---------------FILTER TAPS INITIALIZATION-------------//
 
     FILE * coeff_file = fopen(coeff_file_s,"r"); //Open file in main and pass it as reference to coefficients_init
     status = coefficients_init(coeff_file, fxp_coeffs);
 
-    printf("\nConfig for Filter\n\nNumber of samples: %d, Fractional bits: %d ", samples, nb_frac);
     fclose(coeff_file);
-
-    //--------------------------------------------//
 
     //---------------FILTER APPLYING----- --------//
 
