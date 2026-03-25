@@ -62,10 +62,6 @@ def run_cli(args):
     # Caso normal
     cmd_str, exec_time_ms, result = run_c_filter(cmd)
 
-    print("COMANDO EJECUTADO:")
-    print(cmd_str)
-    print()
-
     print(f"TIEMPO DE EJECUCIÓN: {exec_time_ms:.3f} ms")
     print()
 
@@ -179,9 +175,6 @@ def run_gui():
         txt = tk.Text(win, wrap="word")
         txt.pack(fill="both", expand=True)
 
-        txt.insert("end", "COMANDO:\n", "b")
-        txt.insert("end", cmd + "\n\n")
-
         txt.insert("end", "TIEMPO:\n", "b")
         txt.insert("end", f"{t_ms:.3f} ms\n\n")
 
@@ -202,9 +195,12 @@ def run_gui():
     
         x = np.fromfile(INPUT_FILE, dtype=np.int32) / (2**31 - 1)
         t = np.arange(len(x)) / FS
-    
+
+        T_SHOW = 0.1  # 10 ms
+        N_SHOW = int(FS * T_SHOW)    
+
         ax_in.clear()
-        ax_in.plot(t[:FS//2], x[:FS//2])
+        ax_in.plot(t[:N_SHOW], x[:N_SHOW])
     
         ax_in.set_title("Señal de entrada")
         ax_in.set_xlabel("Tiempo [s]")
@@ -220,9 +216,12 @@ def run_gui():
     
         y = np.fromfile(OUTPUT_FILE, dtype=np.int32) / (2**31 - 1)
         t = np.arange(len(y)) / FS
-    
+
+        T_SHOW = 0.01  # 10 ms
+        N_SHOW = int(FS * T_SHOW)    
+
         ax_out.clear()
-        ax_out.plot(t[:FS//2], y[:FS//2])
+        ax_out.plot(t[:N_SHOW], y[:N_SHOW])
     
         ax_out.set_title("Señal de salida (Filtro FIR)")
         ax_out.set_xlabel("Tiempo [s]")
@@ -240,12 +239,12 @@ def run_gui():
         n = len(coeffs)
     
         ax_coef.clear()
-    
-        ax_coef.scatter(
-            np.arange(n),
-            coeffs,
-            s=10
-        )
+        ax_coef.stem(coeffs)
+        # ax_coef.scatter(
+        #     np.arange(n),
+        #     coeffs,
+        #     s=10
+        # )
     
         ax_coef.axhline(0, linewidth=0.8)
     
@@ -372,11 +371,11 @@ def run_gui():
     from matplotlib.gridspec import GridSpec
     
     fig = Figure(figsize=(7, 6))
-    gs = GridSpec(3, 1, height_ratios=[3, 3, 1], figure=fig)
-    
-    ax_in = fig.add_subplot(gs[0])
-    ax_out = fig.add_subplot(gs[1])
-    ax_coef = fig.add_subplot(gs[2])
+    gs = GridSpec(2, 2, height_ratios=[3, 1], width_ratios=[3, 1], figure=fig)
+
+    ax_in = fig.add_subplot(gs[0, 0])
+    ax_out = fig.add_subplot(gs[1, 0])
+    ax_coef = fig.add_subplot(gs[:, 1])  # ocupa columna derecha completa    
     
     # Configuración inicial (vacíos)
     ax_in.set_title("Señal de entrada")
