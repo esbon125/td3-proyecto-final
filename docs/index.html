@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Filtro FIR en Punto Fijo: Filtro FIR en Punto Fijo</title>
+<title>Filtro FIR para audio implementado en C para Linux arquitectura x86: Filtro FIR en Punto Fijo</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,7 +27,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="utn_small.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Filtro FIR en Punto Fijo<span id="projectnumber">&#160;Esteban Bustamante</span>
+   <div id="projectname">Filtro FIR para audio implementado en C para Linux arquitectura x86<span id="projectnumber">&#160;Esteban Bustamante</span>
    </div>
    <div id="projectbrief">Trabajo desarrollado como trabajo final de la materia Técnicas Digitales III</div>
   </td>
@@ -195,7 +195,7 @@ Instalación de dependencias</h1>
 <h2 class="doxsection"><a class="anchor" id="install_dependencies"></a>
 Instalación automática</h2>
 <p>Ejecutar:</p>
-<div class="fragment"><div class="line">chmod install_dependencies.sh +x</div>
+<div class="fragment"><div class="line">chmod +x install_dependencies.sh</div>
 <div class="line">./install_dependencies.sh</div>
 </div><!-- fragment --><p>Este script instala:</p><ul>
 <li>numpy</li>
@@ -243,10 +243,10 @@ Demostración en modo gráfico (GUI)</h2>
 <h2 class="doxsection"><a class="anchor" id="demo_cli"></a>
 Demostración en modo línea de comandos (CLI)</h2>
 <p>El filtro también puede ejecutarse directamente desde la línea de comandos. Para esto deberán tener los archivos coeficientes.pcm e input.pcm que se incluyen con el programa, incluídos en el link de las releases. Es necesario ubicar estos archivos dentro de la carpeta td3-proyecto-final-1.6.0 que se extrae del zip descargado. Luego ejecutando estos comandos podríamos correr el programa.</p>
-<div class="fragment"><div class="line">cp coeficientes.pcm input.pcm code/utils/scripts/</div>
+<div class="fragment"><div class="line">cp coeficientes_hamming_5k.txt input_impulse.pcm code/utils/scripts/</div>
 <div class="line">cd code/src &amp;&amp; make</div>
 <div class="line">cd ../utils/scripts</div>
-<div class="line">./fir_filter_utn -fc=coeficientes.pcm -NB-FRAC=31 --samples=80 input.pcm</div>
+<div class="line">./fir_filter_utn -fc=coeficientes_hamming_5k.txt -NB-FRAC=31 --samples=80 input_impulse.pcm</div>
 </div><!-- fragment --><p>donde:</p><ul>
 <li><b>coeficientes.pcm</b> es el archivo que contiene los coeficientes del filtro (en formato float, uno por línea).</li>
 <li><b>NB-FRAC</b> indica el número de bits fraccionales utilizados.</li>
