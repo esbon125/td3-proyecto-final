@@ -161,7 +161,7 @@
  * Ejecutar:
  *
  * @code{.sh}
- * chmod install_dependencies.sh +x
+ * chmod +x install_dependencies.sh
  * ./install_dependencies.sh
  * @endcode
  *
