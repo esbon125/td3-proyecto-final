@@ -13,7 +13,7 @@ DURATION = 2.0
 N = int(FS * DURATION)
 OUT_DIR = "out"
 FILTER_BIN = "./fir_filter_utn"
-COEFF_FILE = "coef_bandpass_hamming.txt"
+COEFF_FILE = "coef_bandpass_hamming_5k.txt"
 
 os.makedirs(OUT_DIR, exist_ok=True)
 
@@ -68,7 +68,7 @@ def test_multitone():
     t = np.arange(N) / FS
 
     f1 = 200      # fuera
-    f2 = 8000     # dentro
+    f2 = 2500     # dentro
     f3 = 22000     # fuera
 
     x = 0.3*np.sin(2*np.pi*f1*t) + \
@@ -204,6 +204,18 @@ def plot_results(results):
 
     plt.tight_layout()
     plt.savefig(os.path.join(FIG_DIR, "impulse_response.png"), dpi=300)
+    plt.close()
+
+    # -------- FFT RESPUESTA AL IMPULSO -------- #
+    plt.figure(figsize=(8,5))
+    plot_fft(y_imp, "Respuesta al impulso")
+    plt.title("FFT - Respuesta al impulso (H(f))")
+    plt.xlabel("Frecuencia [Hz]")
+    plt.ylabel("Magnitud [dB]")
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(os.path.join(FIG_DIR, "fft_impulse_response.png"), dpi=300)
     plt.close()
 
     # -------- FFT MULTITONO -------- #
