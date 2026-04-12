@@ -3,7 +3,7 @@ MAKE=make
 PROGRAM ?= fir_filter
 
 FXP_LIB=libfxp.a
-FXP_PATH=/home/esbon1253/Documents/agenda_files/data/60/219649-c148-4b1c-9e95-0464b970eac3/tpfinal/code/fxp
+FXP_PATH=../fxp
 FXP_LIB_PATH=$(FXP_PATH)/out
 
 CFLAGS= -Wall -Wextra -g -I$(FXP_PATH)
@@ -19,7 +19,7 @@ all: $(PROGRAM)
 $(PROGRAM): $(FXP_LIB)
 	@mkdir -p $(OUT_DIR)
 	$(CC) $@.c $(CFLAGS) $(LDFLAGS) -o $(OUT_DIR)/$@ 
-	@cp $(OUT_DIR)/$(PROGRAM) ../utils/scripts/
+	cp $(OUT_DIR)/$(PROGRAM) ../utils/scripts/
 $(FXP_LIB):
 	$(MAKE) --directory=$(FXP_PATH) $@
 
