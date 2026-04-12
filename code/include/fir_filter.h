@@ -231,10 +231,10 @@
  * El filtro también puede ejecutarse directamente desde la línea de comandos. Para esto deberán tener los archivos coeficientes.pcm e input.pcm que se incluyen con el programa, incluídos en el link de las releases. Es necesario ubicar estos archivos dentro de la carpeta td3-proyecto-final-1.6.0 que se extrae del zip descargado. Luego ejecutando estos comandos podríamos correr el programa.
  *
  * @code{.sh}
- * cp coeficientes.pcm input.pcm code/utils/scripts/
+ * cp coeficientes_hamming_5k.txt input_impulse.pcm code/utils/scripts/
  * cd code/src && make
  * cd ../utils/scripts
- * ./fir_filter_utn -fc=coeficientes.pcm -NB-FRAC=31 --samples=80 input.pcm
+ * ./fir_filter_utn -fc=coeficientes_hamming_5k.txt -NB-FRAC=31 --samples=80 input_impulse.pcm
  * @endcode
  *
  * donde:
