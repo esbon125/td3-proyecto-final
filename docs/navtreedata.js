@@ -24,25 +24,8 @@
 */
 var NAVTREE =
 [
-  [ "Filtro FIR en Punto Fijo", "index.html", [
-    [ "Introducción", "index.html#intro", null ],
-    [ "Arquitectura del sistema", "index.html#architecture", null ],
-    [ "Características", "index.html#features", null ],
-    [ "Manejo de audio", "index.html#audio", [
-      [ "Conversión WAV a PCM32", "index.html#wav_to_pcm", null ],
-      [ "Conversión PCM32 a WAV", "index.html#pcm_to_wav", null ],
-      [ "Reproducción de audio", "index.html#audio_playback", null ]
-    ] ],
-    [ "Uso del filtro", "index.html#usage", null ],
-    [ "Instalación de dependencias", "index.html#dependencies", [
-      [ "Instalación automática", "index.html#install_dependencies", null ]
-    ] ],
-    [ "Demostración", "index.html#demo", [
-      [ "Demostración en modo gráfico (GUI)", "index.html#demo_gui", null ],
-      [ "Demostración en modo línea de comandos (CLI)", "index.html#demo_cli", null ]
-    ] ],
-    [ "Posibles mejoras", "index.html#todo", null ],
-    [ "Referencias", "index.html#references", null ],
+  [ "Filtro FIR para audio implementado en C para Linux arquitectura x86", "index.html", [
+    [ "Filtro FIR en Punto Fijo", "index.html", "index" ],
     [ "Archivos", "files.html", [
       [ "Lista de archivos", "files.html", "files_dup" ],
       [ "Miembros de los archivos", "globals.html", [
