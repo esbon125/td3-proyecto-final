@@ -9,5 +9,6 @@ var fir__filter_8c =
     [ "fxp_coeffs", "fir__filter_8c.html#a5c58eac8526b25918afc7e10ea0943af", null ],
     [ "input_buffer", "fir__filter_8c.html#a988dd3b0286a22f37d3c32e391048525", null ],
     [ "nb_frac", "fir__filter_8c.html#aaf53c5fe51b852f2d1cc53b2857f89d7", null ],
-    [ "samples", "fir__filter_8c.html#a37672e6b906143604cefd3e959777b31", null ]
+    [ "samples", "fir__filter_8c.html#a37672e6b906143604cefd3e959777b31", null ],
+    [ "scale", "fir__filter_8c.html#a1d28dec57cce925ad92342891bd71e7c", null ]
 ];

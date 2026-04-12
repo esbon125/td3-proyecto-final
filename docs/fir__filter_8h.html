@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
-<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Filtro FIR en Punto Fijo: Referencia del archivo /home/esbon1253/Documents/Quinquennium/td3/tpfinal/code/include/fir_filter.h</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
@@ -36,7 +36,7 @@
 </table>
 </div>
 <!-- end header part -->
-<!-- Generado por Doxygen 1.15.0 -->
+<!-- Generado por Doxygen 1.16.1 -->
 <script type="text/javascript">
 var searchBox = new SearchBox("searchBox", "search/",'.html');
 </script>
@@ -105,31 +105,31 @@ $(function(){initNavTree('fir__filter_8h.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 defines</h2></td></tr>
-<tr class="memitem:a6d3c6a4484dcaac72fbfe5100c39b9b6" id="r_a6d3c6a4484dcaac72fbfe5100c39b9b6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d3c6a4484dcaac72fbfe5100c39b9b6">DELTA_ERROR</a>&#160;&#160;&#160;1e-4f</td></tr>
+<tr class="memitem:a6d3c6a4484dcaac72fbfe5100c39b9b6" id="r_a6d3c6a4484dcaac72fbfe5100c39b9b6"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a6d3c6a4484dcaac72fbfe5100c39b9b6">DELTA_ERROR</a>&#160;&#160;&#160;1e-4f</td></tr>
 <tr class="memdesc:a6d3c6a4484dcaac72fbfe5100c39b9b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Error máximo permitido en aserciones y verificaciones.  <br /></td></tr>
-<tr class="memitem:a2b0646b17aeff2a491b0a79de74cea82" id="r_a2b0646b17aeff2a491b0a79de74cea82"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b0646b17aeff2a491b0a79de74cea82">NB_FRAC</a>&#160;&#160;&#160;31</td></tr>
+<tr class="memitem:a2b0646b17aeff2a491b0a79de74cea82" id="r_a2b0646b17aeff2a491b0a79de74cea82"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a2b0646b17aeff2a491b0a79de74cea82">NB_FRAC</a>&#160;&#160;&#160;31</td></tr>
 <tr class="memdesc:a2b0646b17aeff2a491b0a79de74cea82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Número de bits fraccionales.  <br /></td></tr>
-<tr class="memitem:a58e95dc1eb9d6ce16f515e77beeadd58" id="r_a58e95dc1eb9d6ce16f515e77beeadd58"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58e95dc1eb9d6ce16f515e77beeadd58">NB</a>&#160;&#160;&#160;32</td></tr>
+<tr class="memitem:a58e95dc1eb9d6ce16f515e77beeadd58" id="r_a58e95dc1eb9d6ce16f515e77beeadd58"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a58e95dc1eb9d6ce16f515e77beeadd58">NB</a>&#160;&#160;&#160;32</td></tr>
 <tr class="memdesc:a58e95dc1eb9d6ce16f515e77beeadd58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Número total de bits.  <br /></td></tr>
-<tr class="memitem:a74d669c135ddda6e3ef9d667bb2f715b" id="r_a74d669c135ddda6e3ef9d667bb2f715b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74d669c135ddda6e3ef9d667bb2f715b">NB_INT</a>&#160;&#160;&#160;(<a class="el" href="#a58e95dc1eb9d6ce16f515e77beeadd58">NB</a> - <a class="el" href="#a2b0646b17aeff2a491b0a79de74cea82">NB_FRAC</a>)</td></tr>
+<tr class="memitem:a74d669c135ddda6e3ef9d667bb2f715b" id="r_a74d669c135ddda6e3ef9d667bb2f715b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a74d669c135ddda6e3ef9d667bb2f715b">NB_INT</a>&#160;&#160;&#160;(<a class="el" href="#a58e95dc1eb9d6ce16f515e77beeadd58">NB</a> - <a class="el" href="#a2b0646b17aeff2a491b0a79de74cea82">NB_FRAC</a>)</td></tr>
 <tr class="memdesc:a74d669c135ddda6e3ef9d667bb2f715b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Número de bits enteros.  <br /></td></tr>
-<tr class="memitem:a0ce016067dd23b0042727970db7ec763" id="r_a0ce016067dd23b0042727970db7ec763"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ce016067dd23b0042727970db7ec763">MAX_INPUT_LEN</a>&#160;&#160;&#160;256</td></tr>
+<tr class="memitem:a0ce016067dd23b0042727970db7ec763" id="r_a0ce016067dd23b0042727970db7ec763"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a0ce016067dd23b0042727970db7ec763">MAX_INPUT_LEN</a>&#160;&#160;&#160;256</td></tr>
 <tr class="memdesc:a0ce016067dd23b0042727970db7ec763"><td class="mdescLeft">&#160;</td><td class="mdescRight">Número máximo de muestras de entrada procesables en un solo ciclo.  <br /></td></tr>
-<tr class="memitem:a2783942186accfdb6ff9d116db149010" id="r_a2783942186accfdb6ff9d116db149010"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2783942186accfdb6ff9d116db149010">MAX_N_TAPS</a>&#160;&#160;&#160;256</td></tr>
+<tr class="memitem:a2783942186accfdb6ff9d116db149010" id="r_a2783942186accfdb6ff9d116db149010"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a2783942186accfdb6ff9d116db149010">MAX_N_TAPS</a>&#160;&#160;&#160;256</td></tr>
 <tr class="memdesc:a2783942186accfdb6ff9d116db149010"><td class="mdescLeft">&#160;</td><td class="mdescRight">Número máximo de coeficientes (taps) soportados.  <br /></td></tr>
-<tr class="memitem:a2502d2b548954c5d6f3f7123f316b262" id="r_a2502d2b548954c5d6f3f7123f316b262"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2502d2b548954c5d6f3f7123f316b262">MAX_INPUT_BUFFER_SIZE</a>&#160;&#160;&#160;(<a class="el" href="#a2783942186accfdb6ff9d116db149010">MAX_N_TAPS</a> + <a class="el" href="#a0ce016067dd23b0042727970db7ec763">MAX_INPUT_LEN</a> - 1)</td></tr>
+<tr class="memitem:a2502d2b548954c5d6f3f7123f316b262" id="r_a2502d2b548954c5d6f3f7123f316b262"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a2502d2b548954c5d6f3f7123f316b262">MAX_INPUT_BUFFER_SIZE</a>&#160;&#160;&#160;(<a class="el" href="#a2783942186accfdb6ff9d116db149010">MAX_N_TAPS</a> + <a class="el" href="#a0ce016067dd23b0042727970db7ec763">MAX_INPUT_LEN</a> - 1)</td></tr>
 <tr class="memdesc:a2502d2b548954c5d6f3f7123f316b262"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tamaño máximo del buffer de muestras de entrada.  <br /></td></tr>
-<tr class="memitem:a1da41d527b391b557b30acdc9e2cf425" id="r_a1da41d527b391b557b30acdc9e2cf425"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1da41d527b391b557b30acdc9e2cf425">MAX_FILENAME_SIZE</a>&#160;&#160;&#160;256</td></tr>
+<tr class="memitem:a1da41d527b391b557b30acdc9e2cf425" id="r_a1da41d527b391b557b30acdc9e2cf425"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a1da41d527b391b557b30acdc9e2cf425">MAX_FILENAME_SIZE</a>&#160;&#160;&#160;256</td></tr>
 <tr class="memdesc:a1da41d527b391b557b30acdc9e2cf425"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tamaño máximo para cadenas de nombre de archivo.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 typedefs</h2></td></tr>
-<tr class="memitem:a87796ea0dde4455a6a77de749daa785d" id="r_a87796ea0dde4455a6a77de749daa785d"><td class="memItemLeft" align="right" valign="top">typedef enum <a class="el" href="#af9bff8ff1154a04a899276af806b8586">status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a87796ea0dde4455a6a77de749daa785d">status_t</a></td></tr>
+<tr class="memitem:a87796ea0dde4455a6a77de749daa785d" id="r_a87796ea0dde4455a6a77de749daa785d"><td class="memItemLeft">typedef enum <a class="el" href="#af9bff8ff1154a04a899276af806b8586">status_t</a>&#160;</td><td class="memItemRight"><a class="el" href="#a87796ea0dde4455a6a77de749daa785d">status_t</a></td></tr>
 <tr class="memdesc:a87796ea0dde4455a6a77de749daa785d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Códigos de estado de retorno.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumeraciones</h2></td></tr>
-<tr class="memitem:af9bff8ff1154a04a899276af806b8586" id="r_af9bff8ff1154a04a899276af806b8586"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9bff8ff1154a04a899276af806b8586">status_t</a> { <a class="el" href="#af9bff8ff1154a04a899276af806b8586a5bde228d9506a863d51ffbc868ff67f7">STATUS_ERROR</a> = -1
+<tr class="memitem:af9bff8ff1154a04a899276af806b8586" id="r_af9bff8ff1154a04a899276af806b8586"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="#af9bff8ff1154a04a899276af806b8586">status_t</a> { <a class="el" href="#af9bff8ff1154a04a899276af806b8586a5bde228d9506a863d51ffbc868ff67f7">STATUS_ERROR</a> = -1
 , <a class="el" href="#af9bff8ff1154a04a899276af806b8586a7e4a42e3b6dd63708c64cf3db6f69566">STATUS_OK</a> = 0
 , <a class="el" href="#af9bff8ff1154a04a899276af806b8586a540d7ee0cb318dababf800bf07a1319a">STATUS_NULL</a> = 1
  }</td></tr>
@@ -137,7 +137,7 @@ Enumeraciones</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Funciones</h2></td></tr>
-<tr class="memitem:ad50cf43212ea44d5396f8f582aa39f02" id="r_ad50cf43212ea44d5396f8f582aa39f02"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad50cf43212ea44d5396f8f582aa39f02">firFixed</a> (int *coeffs, int *input, int *output, int length, int filterLength)</td></tr>
+<tr class="memitem:ad50cf43212ea44d5396f8f582aa39f02" id="r_ad50cf43212ea44d5396f8f582aa39f02"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad50cf43212ea44d5396f8f582aa39f02">firFixed</a> (int *coeffs, int *input, int *output, int length, int filterLength)</td></tr>
 <tr class="memdesc:ad50cf43212ea44d5396f8f582aa39f02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Función de filtro FIR, donde se calcula la salida para una cantidad de muestras, utilizando las muestras de entrada y los coeficientes del filtro.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Descripción detallada</h2>
@@ -369,6 +369,7 @@ Funciones</h2></td></tr>
   </table>
   </dd>
 </dl>
+<p>scale); // salida en Q1.31 (sin truncado adicional)</p>
 
 </div>
 </div>
@@ -386,7 +387,7 @@ Funciones</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a href="dir_050edd66366d13764f98250ef6db77f6.html">code</a></li><li class="navelem"><a href="dir_f8a5fb882cc5ea0f84873b4bfbe1e42c.html">include</a></li><li class="navelem"><a href="fir__filter_8h.html">fir_filter.h</a></li>
-    <li class="footer">Generado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+    <li class="footer">Generado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>
 </body>
