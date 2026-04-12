@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
-<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Filtro FIR en Punto Fijo: Filtro FIR en Punto Fijo</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
@@ -36,7 +36,7 @@
 </table>
 </div>
 <!-- end header part -->
-<!-- Generado por Doxygen 1.15.0 -->
+<!-- Generado por Doxygen 1.16.1 -->
 <script type="text/javascript">
 var searchBox = new SearchBox("searchBox", "search/",'.html');
 </script>
@@ -99,16 +99,33 @@ Introducción</h1>
 <p>El filtro opera sobre muestras de entrada representadas en formato de punto fijo, haciendo uso de la librería FXP. Para garantizar el correcto sincronismo entre las muestras de entrada y el proceso de filtrado, se emplea un buffer de entrada que permite el procesamiento por bloques de muestras en paralelo.</p>
 <p>Tanto la señal de entrada como la señal de salida del filtro se almacenan en archivos de datos en formato PCM (.pcm). Este formato simplifica el procesamiento posterior de los datos y garantiza compatibilidad con herramientas externas para la visualización y el análisis de señales.</p>
 <p>Con el objetivo de facilitar su uso y análisis, el proyecto incluye una interfaz gráfica desarrollada en Python, que permite generar señales de prueba, ejecutar el filtro y visualizar gráficamente tanto la entrada como la salida. Asimismo, el filtro puede ser ejecutado directamente desde línea de comandos mediante una interfaz CLI.</p>
-<p>Junto al binario se entrega una demostración lista para ser ejecutada tanto en modo gráfico como en modo línea de comandos (ver <a class="el" href="#demo">Demostración</a>).</p>
+<p>Junto al binario se entrega una demostración lista para ser ejecutada tanto en modo gráfico como en modo línea de comandos. (ver <a class="el" href="#demo" title="Demostración">Demostración</a>).</p>
 <h1 class="doxsection"><a class="anchor" id="architecture"></a>
 Arquitectura del sistema</h1>
-<p>El sistema se encuentra dividido en los siguientes bloques principales:</p>
+<p>El sistema completo se compone de múltiples bloques que interactúan entre sí, permitiendo tanto el procesamiento de señales como su análisis y visualización.</p>
+<div class="image">
+<img src="figures/system.png" alt="" width="70%"/>
+<div class="caption">
+Arquitectura general del sistema</div></div>
+<p>Los principales componentes son:</p>
 <ul>
-<li><b>Generador de señales</b>: encargado de generar señales de prueba (por ejemplo, tonos senoidales) y almacenarlas en formato PCM.</li>
-<li><b>Filtro FIR</b>: núcleo del sistema, implementado en C, que realiza el filtrado en punto fijo utilizando coeficientes configurables.</li>
-<li><b>Interfaz gráfica (GUI)</b>: desarrollada en Python, permite configurar parámetros, ejecutar el filtro y visualizar resultados.</li>
-<li><b>Interfaz de línea de comandos (CLI)</b>: permite ejecutar el filtro de forma directa, facilitando su integración en scripts y pruebas automatizadas.</li>
+<li><b>Generador de señales</b>: Permite generar señales de prueba como impulso, multitono, chirp y ruido. Estas señales son almacenadas en formato PCM de 32 bits.</li>
+<li><b>Conversión de formatos</b>: Se realiza la conversión entre archivos WAV y PCM32, permitiendo trabajar tanto con señales reales como con señales generadas artificialmente.</li>
+<li><b>Filtro FIR (núcleo en C)</b>: Implementado en lenguaje C utilizando aritmética de punto fijo Q1.31. Realiza el procesamiento de las muestras mediante convolución discreta.</li>
+<li><b>Interfaz Python</b>: Encargada de:<ul>
+<li>Ejecutar el binario del filtro</li>
+<li>Gestionar archivos de entrada/salida</li>
+<li>Visualizar señales en tiempo y frecuencia</li>
 </ul>
+</li>
+<li><b>Visualización</b>: Permite analizar:<ul>
+<li>Señales en dominio temporal</li>
+<li>Espectro en frecuencia mediante FFT</li>
+<li>Coeficientes del filtro</li>
+</ul>
+</li>
+</ul>
+<p>Esta arquitectura modular permite desacoplar el procesamiento numérico (implementado en C) de la interacción con el usuario y análisis (Python), facilitando la portabilidad, reutilización y extensibilidad del sistema. </p>
 <h1 class="doxsection"><a class="anchor" id="features"></a>
 Características</h1>
 <ul>
@@ -125,6 +142,44 @@ Características</h1>
 </ul>
 </li>
 <li>Soporte para ejecución en modo GUI y modo CLI.</li>
+<li>Análisis espectral mediante FFT de señales y respuesta al impulso.</li>
+</ul>
+<h1 class="doxsection"><a class="anchor" id="audio"></a>
+Manejo de audio</h1>
+<p>El sistema implementa soporte para archivos de audio en formato WAV, permitiendo su integración directa con el flujo de procesamiento del filtro FIR.</p>
+<p>Internamente, el filtro opera exclusivamente sobre datos en formato PCM de 32 bits (Q1.31), por lo que se incorporan mecanismos de conversión entre ambos formatos.</p>
+<h2 class="doxsection"><a class="anchor" id="wav_to_pcm"></a>
+Conversión WAV a PCM32</h2>
+<p>Los archivos WAV de entrada son leídos y convertidos a formato PCM32 mediante:</p>
+<ul>
+<li>Normalización de la señal al rango [-1, 1]</li>
+<li>Conversión a punto fijo Q1.31</li>
+<li>Reducción a un solo canal en caso de audio estéreo</li>
+</ul>
+<p>Este proceso permite utilizar señales reales como entrada del filtro, manteniendo consistencia con la representación interna del sistema.</p>
+<h2 class="doxsection"><a class="anchor" id="pcm_to_wav"></a>
+Conversión PCM32 a WAV</h2>
+<p>Luego del procesamiento, la señal filtrada puede convertirse nuevamente a formato WAV, permitiendo:</p>
+<ul>
+<li>Reproducción directa del resultado</li>
+<li>Análisis en herramientas externas (Audacity, MATLAB, etc.)</li>
+</ul>
+<p>La conversión incluye:</p>
+<ul>
+<li>Escalado de Q1.31 a formato flotante</li>
+<li>Conversión a entero de 16 bits (formato estándar WAV)</li>
+<li>Escritura del archivo con la frecuencia de muestreo correspondiente</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="audio_playback"></a>
+Reproducción de audio</h2>
+<p>El sistema permite la reproducción de señales de entrada y salida mediante herramientas del sistema operativo (por ejemplo, <em>aplay</em> en Linux).</p>
+<p>Esta funcionalidad facilita la validación perceptual del filtro, permitiendo evaluar su efecto directamente sobre señales de audio reales.</p>
+<p>En conjunto, estas capacidades convierten al sistema en una herramienta completa de procesamiento de audio, integrando:</p>
+<ul>
+<li>Adquisición de señal</li>
+<li>Procesamiento digital</li>
+<li>Visualización</li>
+<li>Evaluación auditiva</li>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="usage"></a>
 Uso del filtro</h1>
@@ -133,12 +188,45 @@ Uso del filtro</h1>
 <li>Mediante una interfaz gráfica (GUI), pensada para demostraciones y análisis visual.</li>
 <li>Mediante una interfaz de línea de comandos (CLI), orientada a pruebas rápidas o automatización.</li>
 </ul>
+<h1 class="doxsection"><a class="anchor" id="dependencies"></a>
+Instalación de dependencias</h1>
+<p>Para ejecutar correctamente el entorno de simulación, visualización y GUI, es necesario instalar las dependencias de Python requeridas.</p>
+<p>Se provee un script que automatiza este proceso.</p>
+<h2 class="doxsection"><a class="anchor" id="install_dependencies"></a>
+Instalación automática</h2>
+<p>Ejecutar:</p>
+<div class="fragment"><div class="line">chmod install_dependencies.sh +x</div>
+<div class="line">./install_dependencies.sh</div>
+</div><!-- fragment --><p>Este script instala:</p><ul>
+<li>numpy</li>
+<li>matplotlib</li>
+<li>tkinterdnd2</li>
+</ul>
+<p>Además, en sistemas Linux, se recomienda contar con:</p>
+<div class="fragment"><div class="line"># Instalación manual (alternativa al script)</div>
+<div class="line"> </div>
+<div class="line"># Ubuntu / Debian</div>
+<div class="line">sudo apt install python3-tk alsa-utils</div>
+<div class="line"> </div>
+<div class="line"># Arch Linux</div>
+<div class="line">sudo pacman -S tk alsa-utils</div>
+<div class="line"> </div>
+<div class="line"># Fedora</div>
+<div class="line">sudo dnf install python3-tkinter alsa-utils</div>
+</div><!-- fragment --><p>donde:</p><ul>
+<li><b>python3-tk</b> permite el uso de la interfaz gráfica (Tkinter)</li>
+<li><b>alsa-utils</b> permite la reproducción de audio mediante <em>aplay</em></li>
+</ul>
 <h1 class="doxsection"><a class="anchor" id="demo"></a>
 Demostración</h1>
-<p>Para la demostración de la funcionalidad el filtro en C, se generó un filtro haciendo uso de <a href="https://fiiir.com">FIIR</a>, que permite generar coeficientes para filtros arbitrarios con frecuencias de muestreo y filtrado determinadas. Para esta demostración se generó un FIR cuya respuesta al impulso coincide con un seno cardinal (sinc), con una frecuencia de muestreo de 48kHz, una frecuencia de cutoff de 800Hz y un ancho de banda de transición de 3840Hz, el cual observando su respuesta en frecuencia, tenemos que genera una atenuación de 35dB a 0.1 frecuencia relativa a la de Nyquist, es decir ((0.1)Fs/2 = 2.4kHz). </p><div class="image">
-<img src="demo_response_freq.png" alt=""/>
+<p>Para la validación del filtro FIR implementado, se diseñó un filtro pasabanda utilizando la herramienta externa <a href="https://fiiir.com">FIIR</a>, que permite generar coeficientes a partir de especificaciones en frecuencia.</p>
+<p>El filtro generado presenta una respuesta al impulso equivalente a una función seno cardinal (sinc), con una frecuencia de muestreo de 48 kHz, una frecuencia de corte f1=1000 Hz y f2=5000Hz con un ancho de transición para ambos cortes de 700Hz.</p>
+<p>A partir de la respuesta al impulso obtenida, se calculó su Transformada Rápida de Fourier (FFT), lo que permite analizar su comportamiento en frecuencia.</p>
+<div class="image">
+<img src="figures/fft_impulse_response.png" alt="" width="70%"/>
 <div class="caption">
-Respuesta en frecuencia del filtro demostración</div></div>
+FFT de la respuesta al impulso del filtro</div></div>
+<p>En dicha figura se observa la respuesta en frecuencia del sistema, verificando la atenuación en banda de rechazo y el comportamiento esperado del filtro FIR.</p>
 <h2 class="doxsection"><a class="anchor" id="demo_gui"></a>
 Demostración en modo gráfico (GUI)</h2>
 <p>Para ejecutar la demostración en modo gráfico, será necesario descargar en primer lugar la última <a href="https://github.com/esbon125/td3-proyecto-final/releases">release</a>, y luego utilizar los siguientes comandos para ejecutar el script con la interfaz gráfica:</p>
@@ -189,7 +277,7 @@ Referencias</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+    <li class="footer">Generado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>
 </body>

@@ -35,22 +35,45 @@
  * mediante una interfaz CLI.
  *
  * Junto al binario se entrega una demostración lista para ser ejecutada tanto en
- * modo gráfico como en modo línea de comandos
+ * modo gráfico como en modo línea de comandos.
  * (ver @ref demo "Demostración").
  *
  * @section architecture Arquitectura del sistema
  *
- * El sistema se encuentra dividido en los siguientes bloques principales:
+ * El sistema completo se compone de múltiples bloques que interactúan entre sí,
+ * permitiendo tanto el procesamiento de señales como su análisis y visualización.
  *
- * - <b>Generador de señales</b>: encargado de generar señales de prueba
- *   (por ejemplo, tonos senoidales) y almacenarlas en formato PCM.
- * - <b>Filtro FIR</b>: núcleo del sistema, implementado en C, que realiza el
- *   filtrado en punto fijo utilizando coeficientes configurables.
- * - <b>Interfaz gráfica (GUI)</b>: desarrollada en Python, permite configurar
- *   parámetros, ejecutar el filtro y visualizar resultados.
- * - <b>Interfaz de línea de comandos (CLI)</b>: permite ejecutar el filtro de forma
- *   directa, facilitando su integración en scripts y pruebas automatizadas.
+ * @image html figures/system.png  "Arquitectura general del sistema" width=70%
  *
+ * Los principales componentes son:
+ *
+ * - <b>Generador de señales</b>:
+ *   Permite generar señales de prueba como impulso, multitono, chirp y ruido.
+ *   Estas señales son almacenadas en formato PCM de 32 bits.
+ *
+ * - <b>Conversión de formatos</b>:
+ *   Se realiza la conversión entre archivos WAV y PCM32, permitiendo trabajar
+ *   tanto con señales reales como con señales generadas artificialmente.
+ *
+ * - <b>Filtro FIR (núcleo en C)</b>:
+ *   Implementado en lenguaje C utilizando aritmética de punto fijo Q1.31.
+ *   Realiza el procesamiento de las muestras mediante convolución discreta.
+ *
+ * - <b>Interfaz Python</b>:
+ *   Encargada de:
+ *   - Ejecutar el binario del filtro
+ *   - Gestionar archivos de entrada/salida
+ *   - Visualizar señales en tiempo y frecuencia
+ *
+ * - <b>Visualización</b>:
+ *   Permite analizar:
+ *   - Señales en dominio temporal
+ *   - Espectro en frecuencia mediante FFT
+ *   - Coeficientes del filtro
+ *
+ * Esta arquitectura modular permite desacoplar el procesamiento numérico
+ * (implementado en C) de la interacción con el usuario y análisis (Python),
+ * facilitando la portabilidad, reutilización y extensibilidad del sistema.
  * @section features Características
  *
  * - Implementación de un filtro FIR en software.
@@ -64,6 +87,58 @@
  *   - señal de salida
  *   - coeficientes del filtro
  * - Soporte para ejecución en modo GUI y modo CLI.
+ * - Análisis espectral mediante FFT de señales y respuesta al impulso.
+ *
+ * @section audio Manejo de audio
+ *
+ * El sistema implementa soporte para archivos de audio en formato WAV,
+ * permitiendo su integración directa con el flujo de procesamiento del filtro FIR.
+ *
+ * Internamente, el filtro opera exclusivamente sobre datos en formato PCM
+ * de 32 bits (Q1.31), por lo que se incorporan mecanismos de conversión
+ * entre ambos formatos.
+ *
+ * @subsection wav_to_pcm Conversión WAV a PCM32
+ *
+ * Los archivos WAV de entrada son leídos y convertidos a formato PCM32 mediante:
+ *
+ * - Normalización de la señal al rango [-1, 1]
+ * - Conversión a punto fijo Q1.31
+ * - Reducción a un solo canal en caso de audio estéreo
+ *
+ * Este proceso permite utilizar señales reales como entrada del filtro,
+ * manteniendo consistencia con la representación interna del sistema.
+ *
+ * @subsection pcm_to_wav Conversión PCM32 a WAV
+ *
+ * Luego del procesamiento, la señal filtrada puede convertirse nuevamente
+ * a formato WAV, permitiendo:
+ *
+ * - Reproducción directa del resultado
+ * - Análisis en herramientas externas (Audacity, MATLAB, etc.)
+ *
+ * La conversión incluye:
+ *
+ * - Escalado de Q1.31 a formato flotante
+ * - Conversión a entero de 16 bits (formato estándar WAV)
+ * - Escritura del archivo con la frecuencia de muestreo correspondiente
+ *
+ * @subsection audio_playback Reproducción de audio
+ *
+ * El sistema permite la reproducción de señales de entrada y salida mediante
+ * herramientas del sistema operativo (por ejemplo, <i>aplay</i> en Linux).
+ *
+ * Esta funcionalidad facilita la validación perceptual del filtro,
+ * permitiendo evaluar su efecto directamente sobre señales de audio reales.
+ *
+ * En conjunto, estas capacidades convierten al sistema en una herramienta
+ * completa de procesamiento de audio, integrando:
+ *
+ * - Adquisición de señal
+ * - Procesamiento digital
+ * - Visualización
+ * - Evaluación auditiva
+ *
  *
  * @section usage Uso del filtro
  *
@@ -74,9 +149,64 @@
  * - Mediante una interfaz de línea de comandos (CLI), orientada a pruebas rápidas
  *   o automatización.
  *
+ * @section dependencies Instalación de dependencias
+ *
+ * Para ejecutar correctamente el entorno de simulación, visualización y GUI,
+ * es necesario instalar las dependencias de Python requeridas.
+ *
+ * Se provee un script que automatiza este proceso.
+ *
+ * @subsection install_dependencies Instalación automática
+ *
+ * Ejecutar:
+ *
+ * @code{.sh}
+ * chmod +x install_dependencies.sh
+ * ./install_dependencies.sh
+ * @endcode
+ *
+ * Este script instala:
+ * - numpy
+ * - matplotlib
+ * - tkinterdnd2
+ *
+ * Además, en sistemas Linux, se recomienda contar con:
+ *
+ * @code{.sh}
+ * # Instalación manual (alternativa al script)
+ *
+ * # Ubuntu / Debian
+ * sudo apt install python3-tk alsa-utils
+ *
+ * # Arch Linux
+ * sudo pacman -S tk alsa-utils
+ *
+ * # Fedora
+ * sudo dnf install python3-tkinter alsa-utils
+ *
+ * @endcode
+ *
+ * donde:
+ * - <b>python3-tk</b> permite el uso de la interfaz gráfica (Tkinter)
+ * - <b>alsa-utils</b> permite la reproducción de audio mediante <i>aplay</i>
+ *
  * @section demo Demostración
- * Para la demostración de la funcionalidad el filtro en C, se generó un filtro haciendo uso de [FIIR](https://fiiir.com), que permite generar coeficientes para filtros arbitrarios con frecuencias de muestreo y filtrado determinadas. Para esta demostración se generó un FIR cuya respuesta al impulso coincide con un seno cardinal (sinc), con una frecuencia de muestreo de 48kHz, una frecuencia de cutoff de 800Hz y un ancho de banda de transición de 3840Hz, el cual observando su respuesta en frecuencia, tenemos que genera una atenuación de 35dB a 0.1 frecuencia relativa a la de Nyquist, es decir ((0.1)Fs/2 = 2.4kHz).
- * @image html demo_response_freq.png "Respuesta en frecuencia del filtro demostración"
+ *
+ * Para la validación del filtro FIR implementado, se diseñó un filtro pasabanda
+ * utilizando la herramienta externa [FIIR](https://fiiir.com), que permite generar
+ * coeficientes a partir de especificaciones en frecuencia.
+ *
+ * El filtro generado presenta una respuesta al impulso equivalente a una función
+ * seno cardinal (sinc), con una frecuencia de muestreo de 48 kHz, una frecuencia
+ * de corte f1=1000 Hz y f2=5000Hz con un ancho de transición para ambos cortes de 700Hz.
+ *
+ * A partir de la respuesta al impulso obtenida, se calculó su Transformada Rápida
+ * de Fourier (FFT), lo que permite analizar su comportamiento en frecuencia.
+ *
+ * @image html figures/fft_impulse_response.png "FFT de la respuesta al impulso del filtro" width=70%
+ *
+ * En dicha figura se observa la respuesta en frecuencia del sistema, verificando
+ * la atenuación en banda de rechazo y el comportamiento esperado del filtro FIR.
  *
  * @subsection demo_gui Demostración en modo gráfico (GUI)
  *

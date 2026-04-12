@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
-<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Filtro FIR en Punto Fijo: Referencia del archivo /home/esbon1253/Documents/Quinquennium/td3/tpfinal/code/src/fir_filter.c</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
@@ -36,7 +36,7 @@
 </table>
 </div>
 <!-- end header part -->
-<!-- Generado por Doxygen 1.15.0 -->
+<!-- Generado por Doxygen 1.16.1 -->
 <script type="text/javascript">
 var searchBox = new SearchBox("searchBox", "search/",'.html');
 </script>
@@ -101,20 +101,21 @@ $(function(){initNavTree('fir__filter_8c.html','',''); });
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Funciones</h2></td></tr>
-<tr class="memitem:a853216ac51aa181669ff4d3de74058a7" id="r_a853216ac51aa181669ff4d3de74058a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a853216ac51aa181669ff4d3de74058a7">print_help</a> ()</td></tr>
-<tr class="memitem:a53e8d9779fb98254fb0c39aab8d57417" id="r_a53e8d9779fb98254fb0c39aab8d57417"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a53e8d9779fb98254fb0c39aab8d57417">firFixedInit</a> (void)</td></tr>
-<tr class="memitem:ad50cf43212ea44d5396f8f582aa39f02" id="r_ad50cf43212ea44d5396f8f582aa39f02"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad50cf43212ea44d5396f8f582aa39f02">firFixed</a> (int *coeffs, int *input, int *output, int length, int filterLength)</td></tr>
+<tr class="memitem:a853216ac51aa181669ff4d3de74058a7" id="r_a853216ac51aa181669ff4d3de74058a7"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a853216ac51aa181669ff4d3de74058a7">print_help</a> ()</td></tr>
+<tr class="memitem:a53e8d9779fb98254fb0c39aab8d57417" id="r_a53e8d9779fb98254fb0c39aab8d57417"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a53e8d9779fb98254fb0c39aab8d57417">firFixedInit</a> (void)</td></tr>
+<tr class="memitem:ad50cf43212ea44d5396f8f582aa39f02" id="r_ad50cf43212ea44d5396f8f582aa39f02"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad50cf43212ea44d5396f8f582aa39f02">firFixed</a> (int *coeffs, int *input, int *output, int length, int filterLength)</td></tr>
 <tr class="memdesc:ad50cf43212ea44d5396f8f582aa39f02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Función de filtro FIR, donde se calcula la salida para una cantidad de muestras, utilizando las muestras de entrada y los coeficientes del filtro.  <br /></td></tr>
-<tr class="memitem:a1f4af5d16cfcc2bd0f993f05272d7943" id="r_a1f4af5d16cfcc2bd0f993f05272d7943"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f4af5d16cfcc2bd0f993f05272d7943">coefficients_init</a> (FILE *coeff_file, int *<a class="el" href="#a5c58eac8526b25918afc7e10ea0943af">fxp_coeffs</a>)</td></tr>
-<tr class="memitem:a0ddf1224851353fc92bfbff6f499fa97" id="r_a0ddf1224851353fc92bfbff6f499fa97"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ddf1224851353fc92bfbff6f499fa97">main</a> (int argc, char *argv[])</td></tr>
+<tr class="memitem:a1f4af5d16cfcc2bd0f993f05272d7943" id="r_a1f4af5d16cfcc2bd0f993f05272d7943"><td class="memItemLeft">uint8_t&#160;</td><td class="memItemRight"><a class="el" href="#a1f4af5d16cfcc2bd0f993f05272d7943">coefficients_init</a> (FILE *coeff_file, int *<a class="el" href="#a5c58eac8526b25918afc7e10ea0943af">fxp_coeffs</a>)</td></tr>
+<tr class="memitem:a0ddf1224851353fc92bfbff6f499fa97" id="r_a0ddf1224851353fc92bfbff6f499fa97"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a0ddf1224851353fc92bfbff6f499fa97">main</a> (int argc, char *argv[])</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a988dd3b0286a22f37d3c32e391048525" id="r_a988dd3b0286a22f37d3c32e391048525"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a988dd3b0286a22f37d3c32e391048525">input_buffer</a> [<a class="el" href="fir__filter_8h.html#a2502d2b548954c5d6f3f7123f316b262">MAX_INPUT_BUFFER_SIZE</a>]</td></tr>
-<tr class="memitem:a5c58eac8526b25918afc7e10ea0943af" id="r_a5c58eac8526b25918afc7e10ea0943af"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c58eac8526b25918afc7e10ea0943af">fxp_coeffs</a> [<a class="el" href="fir__filter_8h.html#a2783942186accfdb6ff9d116db149010">MAX_N_TAPS</a>]</td></tr>
-<tr class="memitem:a37672e6b906143604cefd3e959777b31" id="r_a37672e6b906143604cefd3e959777b31"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a37672e6b906143604cefd3e959777b31">samples</a> = 80</td></tr>
-<tr class="memitem:aaf53c5fe51b852f2d1cc53b2857f89d7" id="r_aaf53c5fe51b852f2d1cc53b2857f89d7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaf53c5fe51b852f2d1cc53b2857f89d7">nb_frac</a> = 31</td></tr>
-<tr class="memitem:afacbd819a655faa9f8ce20e108ab5e49" id="r_afacbd819a655faa9f8ce20e108ab5e49"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afacbd819a655faa9f8ce20e108ab5e49">filter_length</a> = 0</td></tr>
+<tr class="memitem:a988dd3b0286a22f37d3c32e391048525" id="r_a988dd3b0286a22f37d3c32e391048525"><td class="memItemLeft">int32_t&#160;</td><td class="memItemRight"><a class="el" href="#a988dd3b0286a22f37d3c32e391048525">input_buffer</a> [<a class="el" href="fir__filter_8h.html#a2502d2b548954c5d6f3f7123f316b262">MAX_INPUT_BUFFER_SIZE</a>]</td></tr>
+<tr class="memitem:a5c58eac8526b25918afc7e10ea0943af" id="r_a5c58eac8526b25918afc7e10ea0943af"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a5c58eac8526b25918afc7e10ea0943af">fxp_coeffs</a> [<a class="el" href="fir__filter_8h.html#a2783942186accfdb6ff9d116db149010">MAX_N_TAPS</a>]</td></tr>
+<tr class="memitem:a37672e6b906143604cefd3e959777b31" id="r_a37672e6b906143604cefd3e959777b31"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a37672e6b906143604cefd3e959777b31">samples</a> = 80</td></tr>
+<tr class="memitem:aaf53c5fe51b852f2d1cc53b2857f89d7" id="r_aaf53c5fe51b852f2d1cc53b2857f89d7"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#aaf53c5fe51b852f2d1cc53b2857f89d7">nb_frac</a> = 31</td></tr>
+<tr class="memitem:afacbd819a655faa9f8ce20e108ab5e49" id="r_afacbd819a655faa9f8ce20e108ab5e49"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#afacbd819a655faa9f8ce20e108ab5e49">filter_length</a> = 0</td></tr>
+<tr class="memitem:a1d28dec57cce925ad92342891bd71e7c" id="r_a1d28dec57cce925ad92342891bd71e7c"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#a1d28dec57cce925ad92342891bd71e7c">scale</a> = 0</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Descripción detallada</h2>
 <div class="textblock"><p>Filtro Definido en Software. </p>
@@ -185,6 +186,7 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
+<p>scale); // salida en Q1.31 (sin truncado adicional)</p>
 
 </div>
 </div>
@@ -314,6 +316,20 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a1d28dec57cce925ad92342891bd71e7c" name="a1d28dec57cce925ad92342891bd71e7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d28dec57cce925ad92342891bd71e7c">&#9670;&#160;</a></span>scale</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float scale = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
@@ -328,7 +344,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a href="dir_050edd66366d13764f98250ef6db77f6.html">code</a></li><li class="navelem"><a href="dir_14807827589b339a04434892d1c1deae.html">src</a></li><li class="navelem"><a href="fir__filter_8c.html">fir_filter.c</a></li>
-    <li class="footer">Generado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+    <li class="footer">Generado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>
 </body>
